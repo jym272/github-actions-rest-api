@@ -50,7 +50,7 @@ jobs:
       MONGO_INITDB_USERNAME: test-user
       MONGO_INITDB_PASSWORD: oNVnSwoivIxQss5c
       MONGO_CLUSTER: cluster0.hhxxk.mongodb.net
-      PORT: 3100
+      PORT: 3101
       MONGO_INITDB_DATABASE: rest-api-test
     steps:
       - name: Checkout code
