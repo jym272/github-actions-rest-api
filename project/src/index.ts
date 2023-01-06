@@ -1,54 +1,10 @@
 import express, { Request, Response } from 'express';
-import fs from 'fs';
-import { closeFile, getFile } from './fileHandlers';
-import path from 'path';
-import { ErrorGettingPoems, NewPoemBody } from './types';
-
-const folderName = process.env.FOLDER_NAME ?? 'poems';
-const fileName = process.env.FILE_NAME ?? 'poems.txt';
-
-const folderPath = path.join(__dirname, folderName);
-if (!fs.existsSync(folderPath)) {
-  console.log('Creating poems folder...');
-  fs.mkdirSync(folderPath);
-}
-
-const filePath = path.join(__dirname, folderName, fileName);
+import { connectMongodb, db } from './db';
+import { Person } from './types';
 
 const app = express();
 
 app.use(express.json());
-
-app.post('/new-poem', async (req: Request, res: Response) => {
-  const poemSeparator = '\n***\n';
-  const { title, text } = req.body as NewPoemBody;
-  const poem = `${title}\n\n${text}\n${poemSeparator}`;
-  const fd = await getFile(filePath);
-
-  return fs.appendFile(fd, poem, async err => {
-    if (err) throw err;
-    console.log('The poem was appended to file!');
-    await closeFile(fd);
-    res.send('The poem was appended to file!');
-  });
-});
-
-app.get('/poems', async (req: Request, res: Response) => {
-  try {
-    const fd = await getFile(filePath);
-
-    return fs.readFile(fd, 'utf8', async (err, data) => {
-      if (err) throw err;
-      console.log('The file has been read!');
-      await closeFile(fd);
-      res.send(data);
-    });
-  } catch (e: any) {
-    console.log(e);
-    const error = e as ErrorGettingPoems;
-    return res.send(error.message).status(500);
-  }
-});
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Hello there!');
@@ -67,9 +23,28 @@ app.get('/env', (req: Request, res: Response) => {
   res.send(process.env);
 });
 
+app.get('/get', async (req, res) => {
+  const people = await db.find({}).toArray();
+  res.json(people);
+});
+
+app.post('/save', async (req, res) => {
+  const { name, age } = req.body as Person;
+  const person = { name, age };
+  await db.insertOne(person);
+  res.json({ message: 'Person saved' });
+});
+
+app.delete('/delete/:id', async (req, res) => {
+  const { id } = req.params;
+  await db.deleteOne({ _id: id });
+  res.json({ message: 'Person deleted' });
+});
+
 const PORT = process.env.PORT ?? 3000;
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
+  await connectMongodb();
   const rocketshipEmoji = String.fromCodePoint(0x1f680);
   console.log('\x1b[32m%s\x1b[0m', `${rocketshipEmoji} Server is running on port ${PORT}`);
 });

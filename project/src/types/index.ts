@@ -1,7 +1,4 @@
-export interface NewPoemBody {
-  title: string;
-  text: string;
-}
-export interface ErrorGettingPoems {
-  message: string;
+export interface Person {
+  name: string;
+  age: number;
 }
