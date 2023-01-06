@@ -47,10 +47,10 @@ jobs:
     needs: build-api
     runs-on: ubuntu-latest
     env:
-      MONGO_INITDB_USERNAME: test-github-action-user
-      MONGO_INITDB_PASSWORD: rvGA6VyNN6kuWx8R
+      MONGO_INITDB_USERNAME: ${{ secrets.MONGO_INITDB_USERNAME }}
+      MONGO_INITDB_PASSWORD: ${{ secrets.MONGO_INITDB_PASSWORD }}
       MONGO_CLUSTER: cluster0.hhxxk.mongodb.net
-      PORT: 3101
+      PORT: 3191
       MONGO_INITDB_DATABASE: rest-api-test
     steps:
       - name: Checkout code
