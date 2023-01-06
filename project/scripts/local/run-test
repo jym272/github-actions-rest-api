@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+set -eou pipefail
+
+export MONGO_INITDB_USERNAME=test-user
+export MONGO_INITDB_PASSWORD=oNVnSwoivIxQss5c
+export MONGO_CLUSTER=cluster0.hhxxk.mongodb.net
+export PORT=3100
+export MONGO_INITDB_DATABASE=rest-api-test
+
+bash scripts/test --build

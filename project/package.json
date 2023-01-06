@@ -14,7 +14,7 @@
     "lint:fix": "eslint --ext .ts src --fix",
     "prepare": "cd .. && husky install project/.husky",
     "lint-staged": "lint-staged",
-    "test": "bash run-test --build",
+    "test": "bash scripts/local/run-test",
     "show-report": "npx playwright show-report"
   },
   "keywords": [],

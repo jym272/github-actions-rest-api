@@ -2,12 +2,6 @@
 
 set -eou pipefail
 
-export MONGO_INITDB_USERNAME=test-user
-export MONGO_INITDB_PASSWORD=oNVnSwoivIxQss5c
-export MONGO_CLUSTER=cluster0.hhxxk.mongodb.net
-export PORT=3100
-export MONGO_INITDB_DATABASE=rest-api-test
-
 if [[ $# -gt 1 ]]; then
   echo -e "\e[1;31mInvalid number of arguments\e[0m"
   echo -e "\e[1;32mUsage: bash $0 --build\e[0m"

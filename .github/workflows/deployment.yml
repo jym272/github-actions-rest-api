@@ -75,7 +75,7 @@ jobs:
       - name: Install and Run Tests
         run: |
           npm ci
-          bash run-test
+          bash scripts/test
 
 #  deploy-frontend:
 #    needs: build-frontend
