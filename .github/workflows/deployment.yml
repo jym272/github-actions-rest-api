@@ -1,0 +1,88 @@
+name: Test frontend
+on:
+  push:
+    branches:
+      - master
+#    paths:
+#      - 'project/**'
+defaults:
+  run:
+    shell: bash
+  working-directory: project
+jobs:
+  build-api:
+    runs-on: ubuntu-latest
+    outputs:
+      size: ${{ steps.build.outputs.SIZE }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Get npm cache directory
+        id: npm-cache-dir
+        run: echo "dir=$(npm config get cache)" >> ${GITHUB_OUTPUT}
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        id: npm-cache
+        with:
+          path: |
+            ${{ steps.npm-cache-dir.outputs.dir }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: Install an Build
+        id: build
+        run: |
+          npm ci
+          npm run build
+          cp -rf ../.git/ dist/
+          touch dist/.nojekyll
+          echo "SIZE=$(du -sh dist | awk '{print $1}')" >> $GITHUB_OUTPUT
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: dist
+          path: dist
+#  test-api:
+#    needs: build-api
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v3
+#      - name: Get npm cache directory
+#        id: npm-cache-dir
+#        run: echo "dir=$(npm config get cache)" >> ${GITHUB_OUTPUT}
+#      - name: Cache dependencies
+#        uses: actions/cache@v3
+#        id: npm-cache
+#        with:
+#          path: |
+#            ${{ steps.npm-cache-dir.outputs.dir }}
+#            ${{ github.workspace }}/frontend/.next/cache
+#          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('frontend/components/**', 'frontend/pages/**') }}
+#          restore-keys: |
+#            ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
+#      - name: Install, Lint and Run Tests
+#        working-directory: frontend
+#        run: |
+#          npm ci
+#          npm run lint
+#          npm run test
+#
+#  deploy-frontend:
+#    needs: build-frontend
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Download Artifact
+#        uses: actions/download-artifact@v3
+#        with:
+#          name: frontend
+#      - name: Output from build
+#        run: |
+#          printf 'Out Size in Build Step:\n%s\n' "${{ needs.build-frontend.outputs.size }}"
+#          printf 'Out Size in Download Artifact Files:\n%s\n' "$(du -sh . | awk '{print $1}')"
+#      - name: Deploy
+#        uses: JamesIves/github-pages-deploy-action@releases/v4
+#        with:
+#          BRANCH: gh-pages
+#          FOLDER: .
+#          CLEAN: true

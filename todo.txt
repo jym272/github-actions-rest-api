@@ -1,4 +1,0 @@
-1. express api en typescript, linting, husky.
-2. testing wiht playwright?
-3. base de datos en postgresql
-4. environments and github actions
