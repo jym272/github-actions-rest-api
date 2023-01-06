@@ -8,7 +8,7 @@ on:
 defaults:
   run:
     shell: bash
-  working-directory: project
+    working-directory: project
 jobs:
   build-api:
     runs-on: ubuntu-latest
