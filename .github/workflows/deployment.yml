@@ -38,8 +38,6 @@ jobs:
           cp -rf ../.git/ dist/
           touch dist/.nojekyll
           echo "SIZE=$(du -sh dist | awk '{print $1}')" >> $GITHUB_OUTPUT
-      - name: ECHO
-        run: ls -la
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
@@ -48,6 +46,12 @@ jobs:
   test-api:
     needs: build-api
     runs-on: ubuntu-latest
+    env:
+      MONGO_INITDB_USERNAME: test-user
+      MONGO_INITDB_PASSWORD: oNVnSwoivIxQss5c
+      MONGO_CLUSTER: cluster0.hhxxk.mongodb.net
+      PORT: 3100
+      MONGO_INITDB_DATABASE: rest-api-test
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
