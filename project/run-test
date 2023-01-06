@@ -8,8 +8,26 @@ export MONGO_CLUSTER=cluster0.hhxxk.mongodb.net
 export PORT=3100
 export MONGO_INITDB_DATABASE=rest-api-test
 
+if [[ $# -gt 1 ]]; then
+  echo -e "\e[1;31mInvalid number of arguments\e[0m"
+  echo -e "\e[1;32mUsage: bash $0 --build\e[0m"
+  exit 1
+fi
 
-npm run build
+arg=""
+if [[ $# -eq 1 && $1 != "--build" ]]; then
+  echo -e "\e[1;31mInvalid argument\e[0m"
+  echo -e "\e[1;32mUsage: bash $0 --build\e[0m"
+  exit 1
+elif [[ $# -eq 1 && $1 == "--build" ]]; then
+  arg=$1
+fi
+
+if [[ $arg == "--build" ]]; then
+  echo -e "\e[1;32mBuilding the project\e[0m"
+  npm run build
+fi
+
 node dist/index.js &
 node_pid=$!
 

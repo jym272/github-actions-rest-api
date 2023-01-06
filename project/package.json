@@ -10,11 +10,11 @@
     "build": "swc src -d dist",
     "start": "NODE_ENV=production node dist/index.js",
     "clean": "rm -rf dist",
-    "lint": "eslint --ext .ts src",
+    "lint": "eslint --ext .ts,.js src tests",
     "lint:fix": "eslint --ext .ts src --fix",
     "prepare": "cd .. && husky install project/.husky",
     "lint-staged": "lint-staged",
-    "test": "bash run-test",
+    "test": "bash run-test --build",
     "show-report": "npx playwright show-report"
   },
   "keywords": [],
