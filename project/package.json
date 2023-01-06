@@ -14,13 +14,14 @@
     "lint:fix": "eslint --ext .ts src --fix",
     "prepare": "cd .. && husky install project/.husky",
     "lint-staged": "lint-staged",
-    "test": "npx playwright test",
+    "test": "bash run-test",
     "show-report": "npx playwright show-report"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "mongodb": "^4.13.0"
   },

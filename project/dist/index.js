@@ -4,6 +4,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 const _express = /*#__PURE__*/ _interopRequireDefault(require("express"));
 const _db = require("./db/index");
+const _utils = require("./utils/index");
 function _interopRequireDefault(obj) {
     return obj && obj.__esModule ? obj : {
         default: obj
@@ -36,7 +37,7 @@ app.post('/save', async (req, res)=>{
     };
     await _db.db.insertOne(person);
     res.json({
-        message: 'Person saved'
+        message: 'Person saved.'
     });
 });
 app.delete('/delete/:id', async (req, res)=>{
@@ -45,10 +46,10 @@ app.delete('/delete/:id', async (req, res)=>{
         _id: id
     });
     res.json({
-        message: 'Person deleted'
+        message: 'Person deleted.'
     });
 });
-const PORT = process.env.PORT ?? 3000;
+const PORT = (0, _utils.getEnv)('PORT');
 app.listen(PORT, async ()=>{
     await (0, _db.connectMongodb)();
     const rocketshipEmoji = String.fromCodePoint(0x1f680);

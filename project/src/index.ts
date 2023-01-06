@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 import { connectMongodb, db } from './db';
 import { Person } from './types';
+import { getEnv } from './utils';
 
 const app = express();
 
@@ -32,16 +33,16 @@ app.post('/save', async (req, res) => {
   const { name, age } = req.body as Person;
   const person = { name, age };
   await db.insertOne(person);
-  res.json({ message: 'Person saved' });
+  res.json({ message: 'Person saved.' });
 });
 
 app.delete('/delete/:id', async (req, res) => {
   const { id } = req.params;
   await db.deleteOne({ _id: id });
-  res.json({ message: 'Person deleted' });
+  res.json({ message: 'Person deleted.' });
 });
 
-const PORT = process.env.PORT ?? 3000;
+const PORT = getEnv('PORT');
 
 app.listen(PORT, async () => {
   await connectMongodb();

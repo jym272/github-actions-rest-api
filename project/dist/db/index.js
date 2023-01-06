@@ -13,12 +13,14 @@ _export(exports, {
     connectMongodb: ()=>connectMongodb
 });
 const _mongodb = require("mongodb");
-const username = 'rest-api-user';
-const password = 'manzana';
-const cluster = 'cluster0.hhxxk.mongodb.net';
+const _utils = require("../utils/index");
+const username = (0, _utils.getEnv)('MONGO_INITDB_USERNAME');
+const password = (0, _utils.getEnv)('MONGO_INITDB_PASSWORD');
+const cluster = (0, _utils.getEnv)('MONGO_CLUSTER');
+const dbName = (0, _utils.getEnv)('MONGO_INITDB_DATABASE');
 const uri = `mongodb+srv://${username}:${password}@${cluster}/?retryWrites=true&w=majority`;
 const client = new _mongodb.MongoClient(uri);
-const db = client.db('rest-api').collection('people');
+const db = client.db(dbName).collection('people');
 const connectMongodb = async ()=>{
     await client.connect();
     console.log('Connected successfully to server');
