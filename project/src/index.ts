@@ -33,7 +33,7 @@ app.post('/new-poem', async (req: Request, res: Response) => {
   });
 });
 
-app.gsdset('/poems', async (req: Request, res: Response) => {
+app.get('/poems', async (req: Request, res: Response) => {
   try {
     const fd = await getFile(filePath);
 
