@@ -1,7 +1,6 @@
 #!/bin/sh
 
 cd project || (echo "frontend directory not found" && exit 1)
-./".husky/_/husky.sh"
 
 npm run lint-staged
 rm -rf tsconfig.tsbuildinfo
