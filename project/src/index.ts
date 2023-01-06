@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express';
 import fs from 'fs';
 import { closeFile, getFile } from './fileHandlers';
 import path from 'path';
+import { ErrorGettingPoems, NewPoemBody } from './types';
 
 const folderName = process.env.FOLDER_NAME ?? 'poems';
 const fileName = process.env.FILE_NAME ?? 'poems.txt';
@@ -18,11 +19,6 @@ const app = express();
 
 app.use(express.json());
 
-interface NewPoemBody {
-  title: string;
-  text: string;
-}
-
 app.post('/new-poem', async (req: Request, res: Response) => {
   const poemSeparator = '\n***\n';
   const { title, text } = req.body as NewPoemBody;
@@ -37,30 +33,22 @@ app.post('/new-poem', async (req: Request, res: Response) => {
   });
 });
 
-interface ErrorGettingPoems {
-  message: string;
-}
+app.get('/poems', async (req: Request, res: Response) => {
+  try {
+    const fd = await getFile(filePath);
 
-app.get(
-  '/poems',
-
-  async (req: Request, res: Response) => {
-    try {
-      const fd = await getFile(filePath);
-
-      return fs.readFile(fd, 'utf8', async (err, data) => {
-        if (err) throw err;
-        console.log('The file has been read!');
-        await closeFile(fd);
-        res.send(data);
-      });
-    } catch (e: any) {
-      console.log(e);
-      const error = e as ErrorGettingPoems;
-      return res.send(error.message).status(500);
-    }
+    return fs.readFile(fd, 'utf8', async (err, data) => {
+      if (err) throw err;
+      console.log('The file has been read!');
+      await closeFile(fd);
+      res.send(data);
+    });
+  } catch (e: any) {
+    console.log(e);
+    const error = e as ErrorGettingPoems;
+    return res.send(error.message).status(500);
   }
-);
+});
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Hello there!');
