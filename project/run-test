@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+set -eou pipefail
+
+node dist/index.js &
+node_pid=$!
+
+# Wait for the server to start
+while ! nc -z localhost 3000; do
+  echo "Waiting for server to start..."
+  sleep 0.1
+done
+
+if npx playwright test; then
+  echo "Tests passed"
+  kill $node_pid
+fi
+
