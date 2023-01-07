@@ -32,9 +32,19 @@ while ! nc -z localhost $PORT; do
   sleep 0.1
 done
 
+playwright_test_exit_code=1
+
 if npx playwright test; then
-  echo "Tests passed"
-  node tests/cleanup.js
-  kill $node_pid
+  playwright_test_exit_code=0
 fi
 
+node tests/cleanup.js
+echo "Stopping server..."
+kill $node_pid
+
+if [[ $playwright_test_exit_code -eq 0 ]]; then
+  echo -e "\e[1;32mTests passed\e[0m"
+else
+  echo -e "\e[1;31mTests failed\e[0m"
+  exit 1
+fi
