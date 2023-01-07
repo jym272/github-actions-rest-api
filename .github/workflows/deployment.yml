@@ -79,7 +79,7 @@ jobs:
           npm ci
           bash scripts/test
       - name: Upload report if tests fail
-        if: ${{ steps.running-tests.outcome == 'failure' }}
+        if: ${{ failure() && steps.running-tests.outcome == 'failure' }}
         uses: actions/upload-artifact@v3
         with:
           name: report
