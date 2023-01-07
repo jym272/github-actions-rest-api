@@ -38,7 +38,7 @@ jobs:
           cp -rf ../.git/ dist/
           touch dist/.nojekyll
           echo "SIZE=$(du -sh dist | awk '{print $1}')" >> $GITHUB_OUTPUT
-      - name: Upload Artifact
+      - name: Upload Artifact - Build dist folder
         uses: actions/upload-artifact@v3
         with:
           name: dist
@@ -46,6 +46,7 @@ jobs:
   test-api:
     needs: build-api
     runs-on: ubuntu-latest
+    environment: testing
     env:
       MONGO_INITDB_USERNAME: ${{ secrets.MONGO_INITDB_USERNAME }}
       MONGO_INITDB_PASSWORD: ${{ secrets.MONGO_INITDB_PASSWORD }}
@@ -67,7 +68,7 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
-      - name: Download artifact
+      - name: Download artifact - Build dist folder
         uses: actions/download-artifact@v3
         with:
           name: dist
