@@ -29,6 +29,10 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
+      - if: ${{ steps.npm-cache.outputs.cache-hit != 'true' }}
+        name: Not an exact match is found for a cache for the specified key
+        continue-on-error: true
+        run: npm list
       - name: Install an Build
         id: build
         run: |
@@ -70,6 +74,10 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
+      - if: ${{ steps.npm-cache.outputs.cache-hit != 'true' }}
+        name: Not an exact match is found for a cache for the specified key
+        continue-on-error: true
+        run: npm list
       - name: Download artifact - Build dist folder
         uses: actions/download-artifact@v3
         with:
