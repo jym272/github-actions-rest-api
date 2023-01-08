@@ -54,7 +54,7 @@ jobs:
       PORT: 3191
       MONGO_INITDB_DATABASE: rest-api-test
     outputs:
-      tests-failed: ${{ steps.build.outputs.TESTS_FAILED }}
+      tests-failed: ${{ steps.failure.outputs.TESTS_FAILED }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -87,6 +87,7 @@ jobs:
           name: report
           path: project/playwright-report
       - name: Set Output if tests fail
+        id: failure
         if: ${{ failure() && steps.running-tests.outcome == 'failure' }}
         run: |
           echo "TESTS_FAILED=true" >> $GITHUB_OUTPUT
