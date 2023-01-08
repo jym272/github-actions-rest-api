@@ -53,6 +53,8 @@ jobs:
       MONGO_CLUSTER: cluster0.hhxxk.mongodb.net
       PORT: 3191
       MONGO_INITDB_DATABASE: rest-api-test
+    outputs:
+      tests-failed: ${{ steps.build.outputs.TESTS_FAILED }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -84,6 +86,32 @@ jobs:
         with:
           name: report
           path: project/playwright-report
+      - name: Set Output if tests fail
+        if: ${{ failure() && steps.running-tests.outcome == 'failure' }}
+        run: |
+          echo "TESTS_FAILED=true" >> $GITHUB_OUTPUT
+  report:
+    needs: test-api
+    if: ${{ needs.test-api.outputs.tests-failed == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download report
+        uses: actions/download-artifact@v3
+        with:
+          name: report
+          path: project/playwright-report
+      - name: Show report
+        run: |
+          ls -la 
+          ls -la project/playwright-report
+          cat project/playwright-report/index.html
+          cat project/playwright-report/test-results.json
+          cat project/playwright-report/test-results.json | jq
+          
+          
+
+
+
 
 #  deploy-frontend:
 #    needs: build-frontend
