@@ -104,10 +104,10 @@ jobs:
       - name: Show report
         run: |
           ls -la 
-          ls -la project/playwright-report
-          cat project/playwright-report/index.html
-          cat project/playwright-report/test-results.json
-          cat project/playwright-report/test-results.json | jq
+          ls -la playwright-report
+          cat playwright-report/index.html
+          cat playwright-report/test-results.json
+          cat playwright-report/test-results.json | jq
           
           
 
