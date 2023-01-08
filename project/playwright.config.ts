@@ -4,6 +4,15 @@
  */
 
 const PORT = process.env.PORT ?? 3000;
+const reporters = [
+  ['list', { printSteps: true }],
+  ['html', { open: 'never' }],
+  ['json', { outputFile: 'test-results.json' }]
+];
+if (!process.env.CI) {
+  // if not running in CI remove the json reporter
+  reporters.pop();
+}
 
 const config = {
   testDir: './tests',
@@ -25,11 +34,7 @@ const config = {
   /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: [
-    ['list', { printSteps: true }],
-    ['html', { open: 'never' }],
-    ['json', { outputFile: 'playwright-report/test-results.json' }]
-  ],
+  reporter: reporters,
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     baseURL: `http://127.0.0.1:${PORT}`
