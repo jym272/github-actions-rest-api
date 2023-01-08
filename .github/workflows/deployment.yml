@@ -105,8 +105,6 @@ jobs:
         run: |
           ls -la 
           ls -la playwright-report
-          cat playwright-report/index.html
-          cat playwright-report/test-results.json
           cat playwright-report/test-results.json | jq
           
           
