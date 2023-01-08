@@ -1,4 +1,4 @@
-name: Test frontend
+name: Test rest api
 on:
   push:
     branches:
