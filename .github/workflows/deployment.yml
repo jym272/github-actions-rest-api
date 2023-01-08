@@ -92,7 +92,7 @@ jobs:
           echo "TESTS_FAILED=true" >> $GITHUB_OUTPUT
   report:
     needs: test-api
-    if: ${{ needs.test-api.outputs.tests-failed == 'true' }}
+    if: ${{ failure() && needs.test-api.outputs.tests-failed == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - name: Download report
