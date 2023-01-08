@@ -7,7 +7,7 @@ const PORT = process.env.PORT ?? 3000;
 const reporters = [
   ['list', { printSteps: true }],
   ['html', { open: 'never' }],
-  ['json', { outputFile: 'test-results.json' }]
+  ['json', { outputFile: 'playwright-report/test-results.json' }]
 ];
 if (!process.env.CI) {
   // if not running in CI remove the json reporter
