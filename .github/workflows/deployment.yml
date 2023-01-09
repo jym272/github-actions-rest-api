@@ -125,7 +125,9 @@ jobs:
     steps:
       - name: Print size
         working-directory: .
-        run: echo ${{ needs.deploy.outputs.size }}
+        run: |
+          pwd
+          echo ${{ needs.deploy.outputs.size }}
 
 #  deploy-frontend:
 #    needs: build-frontend

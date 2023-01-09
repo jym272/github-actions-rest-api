@@ -15,7 +15,7 @@ on:
 jobs:
   deploy:
     outputs:
-      size-outcome: ${{ steps.build.outputs.SIZE }}
+      size-outcome: ${{ steps.greetings.outputs.SIZE }}
     runs-on: ubuntu-latest
     steps:
       - name: Getting artifact
@@ -23,6 +23,7 @@ jobs:
         with:
           name: ${{ inputs.artifact-name }}
       - name: Greetings!
+        id: greetings
         run: |
           pwd
           ls -la
