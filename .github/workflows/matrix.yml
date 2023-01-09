@@ -1,8 +1,5 @@
 name: Matrix Demo
-on:
-  push:
-    branches:
-      - master
+on: workflow_dispatch
 defaults:
   run:
     shell: bash

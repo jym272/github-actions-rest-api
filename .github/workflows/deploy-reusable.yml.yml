@@ -1,0 +1,24 @@
+name: Deploy
+on:
+  workflow_call:
+    inputs:
+      artifact-name:
+        description: Name of the artifact to download
+        required: true
+        type: string
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Getting artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ inputs.artifact-name }}
+      - name: Greetings!
+        run: |
+          ls -la
+          echo 'Oh hello there'
+            
+
+

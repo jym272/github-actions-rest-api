@@ -116,12 +116,9 @@ jobs:
           cat playwright-report/test-results.json | jq
   deploy:
     needs: test-api
-    uses: ./.github/workflows/deploy.yml
-          
-          
-
-
-
+    uses: ./.github/workflows/deploy-reusable.yml
+    with:
+      artifact-name: dist
 
 #  deploy-frontend:
 #    needs: build-frontend
