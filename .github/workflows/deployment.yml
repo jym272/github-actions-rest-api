@@ -124,6 +124,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Print size
+        working-directory: .
         run: echo ${{ needs.deploy.outputs.size }}
 
 #  deploy-frontend:
