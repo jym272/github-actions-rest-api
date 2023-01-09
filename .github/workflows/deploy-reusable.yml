@@ -24,6 +24,7 @@ jobs:
           name: ${{ inputs.artifact-name }}
       - name: Greetings!
         run: |
+          pwd
           ls -la
           echo "SIZE=$(du -sh . | awk '{print $1}')" >> $GITHUB_OUTPUT
           echo 'Oh hello there!'
