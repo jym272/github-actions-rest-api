@@ -47,6 +47,69 @@ jobs:
         with:
           name: dist
           path: project/dist
+  test-api-containerized:
+    needs: build-api
+    runs-on: ubuntu-latest
+    container:
+      image: node:19
+#      options: --user root
+    environment: testing
+    env:
+      MONGO_INITDB_USERNAME: jorge
+      MONGO_INITDB_PASSWORD: 123456
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
+      MONGO_CLUSTER: mongodb-service
+      PORT: 3391
+      MONGO_INITDB_DATABASE: rest-api-test-containerized
+      MONGO_CONNECTION_PROTOCOL: mongodb
+    services:
+      mongodb-service:
+        image: mongo:latest
+        env:
+          MONGO_INITDB_ROOT_USERNAME: jorge
+          MONGO_INITDB_ROOT_PASSWORD: 123456
+    outputs:
+      tests-failed: ${{ steps.failure.outputs.TESTS_FAILED }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Get npm cache directory
+        id: npm-cache-dir
+        run: echo "dir=$(npm config get cache)" >> ${GITHUB_OUTPUT}
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        id: npm-cache
+        with:
+          path: |
+            ${{ steps.npm-cache-dir.outputs.dir }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - if: ${{ steps.npm-cache.outputs.cache-hit != 'true' }}
+        name: Not an exact match is found for a cache for the specified key
+        continue-on-error: true
+        run: npm list
+      - name: Download artifact - Build dist folder
+        uses: actions/download-artifact@v3
+        with:
+          name: dist
+          path: project/dist
+      - name: Install and Run Tests
+        id: running-tests
+        run: |
+          npm ci
+          bash scripts/test
+      - name: Upload report if tests fail
+        if: ${{ failure() && steps.running-tests.outcome == 'failure' }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: report
+          path: project/playwright-report
+      - name: Set Output if tests fail
+        id: failure
+        if: ${{ failure() && steps.running-tests.outcome == 'failure' }}
+        run: |
+          echo "TESTS_FAILED=true" >> $GITHUB_OUTPUT
   test-api:
     needs: build-api
     runs-on: ubuntu-latest
