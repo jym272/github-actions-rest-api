@@ -114,6 +114,9 @@ jobs:
           ls -la 
           ls -la playwright-report
           cat playwright-report/test-results.json | jq
+  deploy:
+    needs: test-api
+    uses: ./.github/workflows/deploy.yml
           
           
 
