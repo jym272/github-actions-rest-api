@@ -58,6 +58,7 @@ jobs:
       MONGO_INITDB_USERNAME: jorge
       MONGO_INITDB_PASSWORD: 123456
       JWT_SECRET: ${{ secrets.JWT_SECRET }}
+      # if the host is not containerized use: 127.0.0.1:27017
       MONGO_CLUSTER: mongodb-service
       PORT: 3391
       MONGO_INITDB_DATABASE: rest-api-test-containerized

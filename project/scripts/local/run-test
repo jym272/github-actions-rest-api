@@ -25,5 +25,6 @@ export MONGO_INITDB_PASSWORD=$(getenv "MONGO_INITDB_PASSWORD")
 export MONGO_CLUSTER=$(getenv "MONGO_CLUSTER")
 export PORT=$(getenv "PORT")
 export MONGO_INITDB_DATABASE=$(getenv "MONGO_INITDB_DATABASE")
+export MONGO_CONNECTION_PROTOCOL=$(getenv "MONGO_CONNECTION_PROTOCOL")
 
 bash scripts/test --build

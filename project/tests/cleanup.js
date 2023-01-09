@@ -2,7 +2,7 @@
 const { MongoClient } = require('mongodb');
 
 // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-const uri = `mongodb+srv://${process.env.MONGO_INITDB_USERNAME}:${process.env.MONGO_INITDB_PASSWORD}@${process.env.MONGO_CLUSTER}/?retryWrites=true&w=majority`;
+const uri = `${process.env.MONGO_CONNECTION_PROTOCOL}://${process.env.MONGO_INITDB_USERNAME}:${process.env.MONGO_INITDB_PASSWORD}@${process.env.MONGO_CLUSTER}/?retryWrites=true&w=majority`;
 
 void (async () => {
   console.log('Cleaning collection..');
