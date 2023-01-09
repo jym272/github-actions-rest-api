@@ -54,9 +54,11 @@ jobs:
     env:
       MONGO_INITDB_USERNAME: ${{ secrets.MONGO_INITDB_USERNAME }}
       MONGO_INITDB_PASSWORD: ${{ secrets.MONGO_INITDB_PASSWORD }}
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
       MONGO_CLUSTER: cluster0.hhxxk.mongodb.net
       PORT: 3191
       MONGO_INITDB_DATABASE: rest-api-test
+      MONGO_CONNECTION_PROTOCOL: mongodb+srv
     outputs:
       tests-failed: ${{ steps.failure.outputs.TESTS_FAILED }}
     steps:
