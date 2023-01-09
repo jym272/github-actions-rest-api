@@ -1,0 +1,30 @@
+name: Matrix Demo
+on:
+  push:
+    branches:
+      - master
+defaults:
+  run:
+    shell: bash
+    working-directory: project
+jobs:
+  build:
+    strategy:
+      matrix:
+        node-version: [12.x, 14.x, 16.x]
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+        - name: Getting Code in os ${{ matrix.os }} and node ${{ matrix.node-version }}
+          uses: actions/checkout@v3
+        - name: Setting up Node.js ${{ matrix.node-version }}
+          uses: actions/setup-node@v3
+          with:
+            node-version: ${{ matrix.node-version }}
+        - name: Install dependencies
+          run: npm ci
+        - name: Linting
+          run: npm run lint
+        - name: Build
+          run: npm run build
+
