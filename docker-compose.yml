@@ -1,0 +1,22 @@
+version: '3.9'
+
+services:
+  mongodb-service:
+    image: mongo:latest
+    restart: always
+    volumes:
+      - mongo-data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=jorge
+      - MONGO_INITDB_ROOT_PASSWORD=123456
+
+  rest-api:
+    restart: always
+    build:
+      context: ./project
+    env_file:
+      - .env
+    ports:
+      - ${PORT}:${PORT}
+volumes:
+  mongo-data:

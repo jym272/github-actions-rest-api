@@ -2,4 +2,3 @@ node_modules
 .env
 .env.**
 playwright-report
-docker-compose.yml
