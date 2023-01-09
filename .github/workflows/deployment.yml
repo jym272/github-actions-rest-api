@@ -119,6 +119,12 @@ jobs:
     uses: ./.github/workflows/deploy-reusable.yml
     with:
       artifact-name: dist
+  print-size:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print size
+        run: echo ${{ needs.deploy.outputs.size }}
 
 #  deploy-frontend:
 #    needs: build-frontend

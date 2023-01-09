@@ -6,9 +6,16 @@ on:
         description: Name of the artifact to download
         required: true
         type: string
+    outputs:
+      size:
+        description: Size of the artifact
+        value: ${{ jobs.deploy.outputs.size-outcome }}
+
 
 jobs:
   deploy:
+    outputs:
+      size-outcome: ${{ steps.build.outputs.SIZE }}
     runs-on: ubuntu-latest
     steps:
       - name: Getting artifact
@@ -18,7 +25,8 @@ jobs:
       - name: Greetings!
         run: |
           ls -la
-          echo 'Oh hello there'
+          echo "SIZE=$(du -sh . | awk '{print $1}')" >> $GITHUB_OUTPUT
+          echo 'Oh hello there!'
             
 
 
