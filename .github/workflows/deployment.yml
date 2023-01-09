@@ -110,7 +110,7 @@ jobs:
         if: ${{ failure() && steps.running-tests.outcome == 'failure' }}
         uses: actions/upload-artifact@v3
         with:
-          name: report
+          name: report-containerized
           path: project/playwright-report
       - name: Set Output if tests fail
         id: failure
@@ -176,18 +176,32 @@ jobs:
     if: ${{ failure() && (needs.test-api.outputs.tests-failed == 'true' || needs.test-api-containerized.outputs.tests-failed == 'true') }}
     runs-on: ubuntu-latest
     steps:
-      - name: Download report
+      - if: ${{ needs.test-api.outputs.tests-failed == 'true' }}
+        name: Download report
         uses: actions/download-artifact@v3
         with:
           name: report
           path: project/playwright-report
-      - name: Show report
+      - if: ${{ needs.test-api.outputs.tests-failed == 'true' }}
+        name: Show report
         run: |
           ls -la 
           ls -la playwright-report
           cat playwright-report/test-results.json | jq
+      - if: ${{ needs.test-api-containerized.outputs.tests-failed == 'true' }}
+        name: Download report
+        uses: actions/download-artifact@v3
+        with:
+          name: report-containerized
+          path: project/playwright-report-containerized
+      - if: ${{ needs.test-api-containerized.outputs.tests-failed == 'true' }}
+        name: Show report
+        run: |
+          ls -la 
+          ls -la playwright-report-containerized
+          cat playwright-report-containerized/test-results.json | jq
   deploy:
-    needs: test-api
+    needs: [test-api, test-api-containerized]
     uses: ./.github/workflows/deploy-reusable.yml
     with:
       artifact-name: dist
