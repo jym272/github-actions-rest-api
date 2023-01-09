@@ -189,13 +189,13 @@ jobs:
           ls -la playwright-report
           cat playwright-report/test-results.json | jq
       - if: ${{ needs.test-api-containerized.outputs.tests-failed == 'true' }}
-        name: Download report
+        name: Download report containerized
         uses: actions/download-artifact@v3
         with:
           name: report-containerized
           path: project/playwright-report-containerized
       - if: ${{ needs.test-api-containerized.outputs.tests-failed == 'true' }}
-        name: Show report
+        name: Show report containerized
         run: |
           ls -la 
           ls -la playwright-report-containerized
