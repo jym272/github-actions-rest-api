@@ -1,16 +1,16 @@
 # for detailed info go to: https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions
-name: Get & Cache Dependencies
-description: Get the dependencies via npm and cache them.
+name: Cache Dependencies & run commands
+description: Get the dependencies via npm, cache them and run npm commands related.
 inputs:
   working-directory:
-    description: 'Working directory'
+    description: 'Working directory for commands'
     required: false
     default: .
-  run-cmds:
+  run-commands:
     description: "Bash shell commands"
     required: false
     default: |
-      echo 'Please provide the commands to run'
+      echo 'Please provide commands to run'
 
 runs:
   using: composite
@@ -34,8 +34,7 @@ runs:
       shell: bash
       run: npm list
     - name: Running commands
-      id: build
       working-directory: ${{ inputs.working-directory }}
       shell: bash
       run: |
-        ${{ inputs.run-cmds }}
+        ${{ inputs.run-commands }}

@@ -10,15 +10,21 @@ defaults:
 jobs:
   build-api:
     runs-on: ubuntu-latest
-    outputs:
-      size: ${{ steps.build.outputs.SIZE }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: Load cached dependencies
+      - name: Load cached dependencies and run commands
         uses: ./.github/actions/cache-deps
         with:
           working-directory: project
-          run-cmds: |
-            echo "testing"
-            ls -la
+          run-commands: |
+            npm ci
+            npm run lint
+            npm run build
+            cp -rf ../.git/ dist/
+            touch dist/.nojekyll
+      - name: Upload Artifact - Build dist folder
+        uses: actions/upload-artifact@v3
+        with:
+          name: dist
+          path: project/dist
