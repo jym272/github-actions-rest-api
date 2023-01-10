@@ -1,29 +1,40 @@
 # for detailed info go to: https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions
 name: Get & Cache Dependencies
 description: Get the dependencies via npm and cache them.
+inputs:
+  working-directory:
+    description: 'Working directory'
+    required: false
+    default: .
+
 runs:
   using: composite
   steps:
-    - name: Get npm cache directory
-      id: npm-cache-dir
-      run: echo "dir=$(npm config get cache)" >> ${GITHUB_OUTPUT}
+    - name: Print input working-directory
       shell: bash
-    - name: Cache dependencies
-      uses: actions/cache@v3
-      id: npm-cache
-      with:
-        path: |
-          ${{ steps.npm-cache-dir.outputs.dir }}
-        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-node-
-    - if: ${{ steps.npm-cache.outputs.cache-hit != 'true' }}
-      name: Not an exact match is found for a cache for the specified key
-      continue-on-error: true
-      shell: bash
-      run: npm list
-    - name: Install
-      id: build
-      shell: bash
-      run: |
-        npm ci
+      run: | 
+        echo "working-directory: ${{ inputs.working-directory }}"
+
+#    - name: Get npm cache directory
+#      id: npm-cache-dir
+#      run: echo "dir=$(npm config get cache)" >> ${GITHUB_OUTPUT}
+#      shell: bash
+#    - name: Cache dependencies
+#      uses: actions/cache@v3
+#      id: npm-cache
+#      with:
+#        path: |
+#          ${{ steps.npm-cache-dir.outputs.dir }}
+#        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+#        restore-keys: |
+#          ${{ runner.os }}-node-
+#    - if: ${{ steps.npm-cache.outputs.cache-hit != 'true' }}
+#      name: Not an exact match is found for a cache for the specified key
+#      continue-on-error: true
+#      shell: bash
+#      run: npm list
+#    - name: Install
+#      id: build
+#      shell: bash
+#      run: |
+#        npm ci
