@@ -3,8 +3,8 @@ on:
   push:
     branches:
       - master
-#    paths:
-#      - 'project/**'
+    paths:
+      - 'project/**'
 defaults:
   run:
     shell: bash

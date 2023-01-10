@@ -1,0 +1,19 @@
+name: testing actions
+on:
+  push:
+    branches:
+      - master
+defaults:
+  run:
+    shell: bash
+    working-directory: project
+jobs:
+  build-api:
+    runs-on: ubuntu-latest
+    outputs:
+      size: ${{ steps.build.outputs.SIZE }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Load cached dependencies
+        uses: ./.github/actions/cache-deps
