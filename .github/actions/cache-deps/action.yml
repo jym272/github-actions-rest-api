@@ -11,6 +11,18 @@ inputs:
     required: false
     default: |
       echo 'Please provide commands to run'
+  running-test:
+    description: "Specifies whether the given commands run tests"
+    required: false
+    default: 'false'
+  report-name:
+    description: "Report name if commands fails"
+    required: false
+    default: report
+outputs:
+  tests-failed:
+      description: "Specifies whether the given commands failed"
+      value: ${{ steps.failure-test.outputs.TESTS_FAILED }}
 
 runs:
   using: composite
@@ -34,7 +46,20 @@ runs:
       shell: bash
       run: npm list
     - name: Running commands
+      id: running-commands
       working-directory: ${{ inputs.working-directory }}
       shell: bash
       run: |
         ${{ inputs.run-commands }}
+    - name: Upload report if tests fail
+      if: ${{ failure() && steps.running-commands.outcome == 'failure' && inputs.running-test == 'true' }}
+      uses: actions/upload-artifact@v3
+      with:
+        name: ${{ inputs.report-name }}
+        path: project/playwright-report
+    - name: Set Output if tests fail
+      id: failure-test
+      shell: bash
+      if: ${{ failure() && steps.running-commands.outcome == 'failure' && inputs.running-test == 'true' }}
+      run: |
+        echo "TESTS_FAILED=true" >> $GITHUB_OUTPUT

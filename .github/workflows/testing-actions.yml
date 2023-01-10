@@ -53,7 +53,7 @@ jobs:
           MONGO_INITDB_ROOT_USERNAME: jorge
           MONGO_INITDB_ROOT_PASSWORD: 123456
     outputs:
-      tests-failed: ${{ steps.failure.outputs.TESTS_FAILED }}
+      tests-failed: ${{ steps.running-tests.outputs.tests-failed }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -68,22 +68,9 @@ jobs:
         uses: ./.github/actions/cache-deps
         id: running-tests
         with:
+          running-test: true
+          report-name: report-containerized
           working-directory: project
           run-commands: |
             npm ci
             bash scripts/test
-      - name: Echo Output result
-        run: |
-          echo ${{ steps.running-tests.outcome }}
-
-#      - name: Upload report if tests fail
-#        if: ${{ failure() && steps.running-tests.outcome == 'failure' }}
-#        uses: actions/upload-artifact@v3
-#        with:
-#          name: report-containerized
-#          path: project/playwright-report
-#      - name: Set Output if tests fail
-#        id: failure
-#        if: ${{ failure() && steps.running-tests.outcome == 'failure' }}
-#        run: |
-#          echo "TESTS_FAILED=true" >> $GITHUB_OUTPUT
