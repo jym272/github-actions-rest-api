@@ -28,3 +28,62 @@ jobs:
         with:
           name: dist
           path: project/dist
+  test-api-containerized:
+    needs: build-api
+    runs-on: ubuntu-latest
+    container:
+      image: node:19
+    environment: testing
+    env:
+      MONGO_INITDB_USERNAME: jorge
+      MONGO_INITDB_PASSWORD: 123456
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
+      # if the host is not containerized use in MONGO_CLUSTER: 127.0.0.1:27017
+      MONGO_CLUSTER: mongodb-service
+      PORT: 3391
+      MONGO_INITDB_DATABASE: rest-api-test-containerized
+      MONGO_CONNECTION_PROTOCOL: mongodb
+    services:
+      mongodb-service:
+        image: mongo:latest
+        # if the host is not containerized use:
+        #        ports:
+        #          - 27017:27017
+        env:
+          MONGO_INITDB_ROOT_USERNAME: jorge
+          MONGO_INITDB_ROOT_PASSWORD: 123456
+    outputs:
+      tests-failed: ${{ steps.failure.outputs.TESTS_FAILED }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Install Netcat in container
+        run: apt-get update && apt-get install -y netcat
+      - name: Download artifact - Build dist folder
+        uses: actions/download-artifact@v3
+        with:
+          name: dist
+          path: project/dist
+      - name: Load cached dependencies and run commands
+        uses: ./.github/actions/cache-deps
+        id: running-tests
+        with:
+          working-directory: project
+          run-commands: |
+            npm ci
+            bash scripts/test
+      - name: Echo Output result
+        run: |
+          echo ${{ steps.running-tests.outcome }}
+
+#      - name: Upload report if tests fail
+#        if: ${{ failure() && steps.running-tests.outcome == 'failure' }}
+#        uses: actions/upload-artifact@v3
+#        with:
+#          name: report-containerized
+#          path: project/playwright-report
+#      - name: Set Output if tests fail
+#        id: failure
+#        if: ${{ failure() && steps.running-tests.outcome == 'failure' }}
+#        run: |
+#          echo "TESTS_FAILED=true" >> $GITHUB_OUTPUT
