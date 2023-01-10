@@ -78,8 +78,6 @@ jobs:
         uses: actions/checkout@v3
       - name: Install Netcat in container
         run: apt-get update && apt-get install -y netcat
-      - name: Find all package-lock.json
-        run: find . -name package-lock.json
       - name: Get npm cache directory
         id: npm-cache-dir
         run: echo "dir=$(npm config get cache)" >> ${GITHUB_OUTPUT}

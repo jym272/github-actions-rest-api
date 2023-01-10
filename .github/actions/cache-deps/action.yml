@@ -6,16 +6,15 @@ inputs:
     description: 'Working directory'
     required: false
     default: .
+  run-cmds:
+    description: "Bash shell commands"
+    required: false
+    default: |
+      echo 'Please provide the commands to run'
 
 runs:
   using: composite
   steps:
-    - name: Print input working-directory
-      shell: bash
-      run: | 
-        echo "working-directory: ${{ inputs.working-directory }}"
-        pwd && ls -la 
-
     - name: Get npm cache directory
       id: npm-cache-dir
       run: echo "dir=$(npm config get cache)" >> ${GITHUB_OUTPUT}
@@ -34,9 +33,9 @@ runs:
       continue-on-error: true
       shell: bash
       run: npm list
-    - name: Install
+    - name: Running commands
       id: build
       working-directory: ${{ inputs.working-directory }}
       shell: bash
       run: |
-        npm ci
+        ${{ inputs.run-cmds }}

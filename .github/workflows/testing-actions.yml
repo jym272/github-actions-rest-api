@@ -19,3 +19,6 @@ jobs:
         uses: ./.github/actions/cache-deps
         with:
           working-directory: project
+          run-cmds: |
+            echo "testing"
+            ls -la
