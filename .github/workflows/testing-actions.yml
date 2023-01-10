@@ -74,7 +74,64 @@ jobs:
           run-commands: |
             npm ci
             bash scripts/test
-      - if: ${{ failure() }}
-        name: Echo outputs tests-failed
-        run : |
-          echo ${{ steps.running-tests.outputs.tests-failed }}
+  test-api:
+    needs: build-api
+    runs-on: ubuntu-latest
+    environment: testing
+    env:
+      MONGO_INITDB_USERNAME: ${{ secrets.MONGO_INITDB_USERNAME }}
+      MONGO_INITDB_PASSWORD: ${{ secrets.MONGO_INITDB_PASSWORD }}
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
+      MONGO_CLUSTER: cluster0.hhxxk.mongodb.net
+      PORT: 3191
+      MONGO_INITDB_DATABASE: rest-api-test
+      MONGO_CONNECTION_PROTOCOL: mongodb+srv
+    outputs:
+      tests-failed: ${{ steps.running-tests.outputs.tests-failed }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Download artifact - Build dist folder
+        uses: actions/download-artifact@v3
+        with:
+          name: dist
+          path: project/dist
+      - name: Load cached dependencies and run commands
+        uses: ./.github/actions/cache-deps
+        id: running-tests
+        with:
+          running-test: true
+          report-name: report
+          working-directory: project
+          run-commands: |
+            npm ci
+            bash scripts/test
+  report:
+    needs: [test-api, test-api-containerized]
+    if: ${{ failure() && (needs.test-api.outputs.tests-failed == 'true' || needs.test-api-containerized.outputs.tests-failed == 'true') }}
+    runs-on: ubuntu-latest
+    steps:
+      - if: ${{ needs.test-api.outputs.tests-failed == 'true' }}
+        name: Download report
+        uses: actions/download-artifact@v3
+        with:
+          name: report
+          path: project/playwright-report
+      - if: ${{ needs.test-api.outputs.tests-failed == 'true' }}
+        name: Show report
+        run: |
+          ls -la 
+          ls -la playwright-report
+          cat playwright-report/test-results.json | jq
+      - if: ${{ needs.test-api-containerized.outputs.tests-failed == 'true' }}
+        name: Download report containerized
+        uses: actions/download-artifact@v3
+        with:
+          name: report-containerized
+          path: project/playwright-report-containerized
+      - if: ${{ needs.test-api-containerized.outputs.tests-failed == 'true' }}
+        name: Show report containerized
+        run: |
+          ls -la 
+          ls -la playwright-report-containerized
+          cat playwright-report-containerized/test-results.json | jq
