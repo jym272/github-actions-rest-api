@@ -17,3 +17,5 @@ jobs:
         uses: actions/checkout@v3
       - name: Load cached dependencies
         uses: ./.github/actions/cache-deps
+        with:
+          working-directory: project
