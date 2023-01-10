@@ -14,6 +14,7 @@ runs:
       shell: bash
       run: | 
         echo "working-directory: ${{ inputs.working-directory }}"
+        pwd && ls -la 
 
 #    - name: Get npm cache directory
 #      id: npm-cache-dir
