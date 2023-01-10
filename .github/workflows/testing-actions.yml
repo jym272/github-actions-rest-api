@@ -135,3 +135,17 @@ jobs:
           ls -la 
           ls -la playwright-report-containerized
           cat playwright-report-containerized/test-results.json | jq
+  deploy:
+    needs: [test-api, test-api-containerized]
+    uses: ./.github/workflows/deploy-reusable.yml
+    with:
+      artifact-name: dist
+  print-size:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print size
+        working-directory: .
+        run: |
+          pwd
+          echo ${{ needs.deploy.outputs.size }}
