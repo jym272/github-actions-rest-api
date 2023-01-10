@@ -74,3 +74,7 @@ jobs:
           run-commands: |
             npm ci
             bash scripts/test
+      - if: ${{ failure() }}
+        name: Echo outputs tests-failed
+        run : |
+          echo ${{ steps.running-tests.outputs.tests-failed }}
