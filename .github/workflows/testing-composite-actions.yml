@@ -1,8 +1,10 @@
-name: testing actions
+name: Test rest api with composite custom actions
 on:
   push:
     branches:
       - master
+    paths:
+      - 'project/**'
 defaults:
   run:
     shell: bash

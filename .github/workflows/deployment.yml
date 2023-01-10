@@ -1,14 +1,11 @@
-name: Test rest api
-on:
-  push:
-    branches:
-      - master
-    paths:
-      - 'project/**'
+name: Test rest api without custom composite actions
+on: workflow_dispatch
+
 defaults:
   run:
     shell: bash
     working-directory: project
+
 jobs:
   build-api:
     runs-on: ubuntu-latest
