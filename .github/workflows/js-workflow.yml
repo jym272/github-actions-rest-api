@@ -11,15 +11,11 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: Build actions
-        shell: bash
-        run: |
-          bash ./.github/actions/build-actions
       - name: Hello world action step
         id: hello
         uses: ./.github/actions/deploy-s3-js-action
         with:
-          who-to-greet: 'Jorgeeeee'
+          who-to-greet: 'Jorgeeeeeasdasd'
       # Use the output from the `hello` step
       - name: Get the output time
         run: echo "The time was ${{ steps.hello.outputs.time }}"

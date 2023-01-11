@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 set -eou pipefail
-cd .github/actions/deploy-s3-js-action || (echo "deploy-s3-js-action dir does not exists" && exit 1)
+#cd .github/actions/deploy-s3-js-action || (echo "deploy-s3-js-action dir does not exists" && exit 1)
 
 # clean install
 if [ -f yarn.lock ]; then
@@ -16,5 +16,4 @@ fi
 
 # build
 npm run build
-
-echo -e "\e[32mBuild actions complete\e[0m"
+echo -e "\e[32mBuild action complete.\e[0m"
