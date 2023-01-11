@@ -1,8 +1,8 @@
 name: Using Javascript action
-on:
-  push:
-    branches:
-      - master
+on: [deployment]
+#  push:
+#    branches:
+#      - master
 
 jobs:
   hello_world_job:
