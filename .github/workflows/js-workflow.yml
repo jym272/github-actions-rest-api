@@ -1,9 +1,8 @@
 name: Using Javascript action
-on: [deployment]
-#  push:
-#    branches:
-#      - master
-
+on:
+  push:
+    branches:
+      - master
 jobs:
   hello_world_job:
     runs-on: ubuntu-latest
