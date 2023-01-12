@@ -72,6 +72,8 @@ jobs:
         uses: actions/checkout@v3
       - name: Install Bash
         run: apk add --no-cache bash
+      - name: Install Compatible Tar
+        run: apk add --no-cache tar
 #      - name: Install Netcat in container
 #        run: apt-get update && apt-get install -y netcat
       - name: Download artifact - Build dist folder
