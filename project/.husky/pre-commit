@@ -1,4 +1,6 @@
-#!/bin/sh
+#!/usr/bin/env bash
+
+set -eou pipefail
 
 cd project || (echo "frontend directory not found" && exit 1)
 
