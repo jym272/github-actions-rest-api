@@ -7,7 +7,7 @@ on:
 #      - 'project/**'
 defaults:
   run:
-    shell: bash
+#    shell: bash
     working-directory: project
 jobs:
   lint:
