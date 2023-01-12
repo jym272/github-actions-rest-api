@@ -70,7 +70,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-#      - name: Install
+      - name: Install Bash
+        run: apk add --no-cache bash
 #      - name: Install Netcat in container
 #        run: apt-get update && apt-get install -y netcat
       - name: Download artifact - Build dist folder
