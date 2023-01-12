@@ -1,6 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { MongoClient } = require('mongodb');
 // some vars in .env
+// asdsad
 require('dotenv').config()
 
 // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
