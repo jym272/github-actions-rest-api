@@ -3,3 +3,7 @@
 - print the dir of the deploy
 - crear una funcion para du
 - serguir viendo node env production
+- lista de nombre con A
+- Ana
+- Eri casdfsd
+- Juana wdqwd

@@ -3,8 +3,8 @@ on:
   push:
     branches:
       - master
-    paths:
-      - 'project/**'
+#    paths:
+#      - 'project/**'
 defaults:
   run:
     shell: bash
@@ -45,7 +45,7 @@ jobs:
     needs: build-api-for-test
     runs-on: ubuntu-latest
     container:
-      image: node:19
+      image: node:19-alpine
     environment: testing
     env:
       MONGO_INITDB_USERNAME: jorge
@@ -70,8 +70,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: Install Netcat in container
-        run: apt-get update && apt-get install -y netcat
+#      - name: Install
+#      - name: Install Netcat in container
+#        run: apt-get update && apt-get install -y netcat
       - name: Download artifact - Build dist folder
         uses: actions/download-artifact@v3
         with:
