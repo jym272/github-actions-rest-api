@@ -10,6 +10,18 @@ defaults:
     shell: bash
     working-directory: project
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Load cached dependencies and run commands
+        uses: ./.github/actions/cache-deps
+        with:
+          working-directory: project
+          run-commands: |
+            npm ci
+            npm run lint
   build-api-for-test:
     runs-on: ubuntu-latest
     steps:
@@ -137,7 +149,7 @@ jobs:
           ls -la playwright-report-containerized
           cat playwright-report-containerized/test-results.json | jq
   deploy:
-    needs: [test-api, test-api-containerized]
+    needs: [test-api, test-api-containerized, lint]
     uses: ./.github/workflows/deploy-reusable.yml
     with:
       artifact-name: dist
