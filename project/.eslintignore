@@ -3,3 +3,4 @@ dist
 playwright.config.ts
 playwright-report
 webpack.config.js
+commitlint.config.js

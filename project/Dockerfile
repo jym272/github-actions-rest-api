@@ -4,8 +4,8 @@ WORKDIR /app
 
 COPY package.json package-lock.json ./
 
-#clean install
-RUN npm ci
+# clean install - omit devDependencies
+RUN npm ci --production
 
 FROM node:19-alpine as builder
 

@@ -2,7 +2,4 @@
 set -eou pipefail
 
 cd project || (echo "project directory not found" && exit 1)
-
-npm run lint-staged
-rm -rf tsconfig.tsbuildinfo
-
+npx --no -- commitlint --edit "${1}"
