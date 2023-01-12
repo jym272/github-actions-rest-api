@@ -1,0 +1,48 @@
+service: rest-api-express
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: sa-east-1
+  apiGateway:
+    shouldStartNameWithService: true
+  environment:
+    MONGO_INITDB_USERNAME: rest-api-user
+    MONGO_INITDB_PASSWORD: manzana
+    MONGO_CLUSTER: cluster0.hhxxk.mongodb.net
+    MONGO_INITDB_DATABASE: rest-api
+    MONGO_CONNECTION_PROTOCOL: mongodb+srv
+    PORT: 3000
+    JWT_SECRET: 30ebb748a86f397f844511314d462061a38e3ad8d171737b47f1bf0505db4482
+
+#  iamRoleStatements:
+#    - Effect: Allow
+#      Action:
+#        - "sts:AssumeRole"
+#      Resource: ${file(./realtimenotification/handler.js):externalRol.arn}
+
+plugins:
+  - serverless-webpack
+
+package:
+  individually: true # to package functions individually. You can toggle this and check the difference webpack generates
+
+functions:
+  rest-api:
+    handler: src/index.handler
+    events:
+      - http:
+          path: /
+          method: any
+          cors: true
+      - http:
+          path: /{proxy+}
+          method: any
+          cors: true
+
+custom:
+  webpack:
+    webpackConfig: webpack.config.js
+    includeModules: true
+    packager: 'npm'

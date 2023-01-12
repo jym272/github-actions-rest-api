@@ -3,6 +3,7 @@ import { connectMongodb, db } from './db';
 import { Person, DecodedPermission } from './types';
 import { getEnv } from './utils';
 import jwt from 'jsonwebtoken';
+import serverless from 'serverless-http';
 const app = express();
 
 const secret = getEnv('JWT_SECRET');
@@ -88,3 +89,5 @@ app.listen(PORT, async () => {
   const rocketshipEmoji = String.fromCodePoint(0x1f680);
   console.log('\x1b[32m%s\x1b[0m', `${rocketshipEmoji} Server is running on port ${PORT}`);
 });
+
+export const handler = serverless(app);

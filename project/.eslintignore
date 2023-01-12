@@ -2,3 +2,4 @@ node_modules
 dist
 playwright.config.ts
 playwright-report
+webpack.config.js
