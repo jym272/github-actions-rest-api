@@ -7,7 +7,6 @@ on:
 #      - 'project/**'
 defaults:
   run:
-#    shell: bash
     working-directory: project
 jobs:
   lint:
@@ -74,8 +73,6 @@ jobs:
         run: apk add --no-cache bash
       - name: Install Compatible Tar
         run: apk add --no-cache tar
-#      - name: Install Netcat in container
-#        run: apt-get update && apt-get install -y netcat
       - name: Download artifact - Build dist folder
         uses: actions/download-artifact@v3
         with:
