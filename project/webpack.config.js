@@ -2,7 +2,7 @@ const nodeExternals = require('webpack-node-externals');
 const slsw = require('serverless-webpack');
 const path = require('path');
 const isProd = process.env.NODE_ENV === 'production' || process.env.CI;
-console.log('ISPRODUCTION', isProd);
+
 module.exports = {
   target: 'node',
   mode: isProd ? 'production' : 'development',

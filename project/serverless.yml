@@ -1,5 +1,6 @@
 service: rest-api-express
 frameworkVersion: '3'
+useDotenv: true
 
 provider:
   name: aws
@@ -8,13 +9,14 @@ provider:
   apiGateway:
     shouldStartNameWithService: true
   environment:
-    MONGO_INITDB_USERNAME: rest-api-user
-    MONGO_INITDB_PASSWORD: manzana
-    MONGO_CLUSTER: cluster0.hhxxk.mongodb.net
-    MONGO_INITDB_DATABASE: rest-api
-    MONGO_CONNECTION_PROTOCOL: mongodb+srv
-    PORT: 3000
-    JWT_SECRET: 30ebb748a86f397f844511314d462061a38e3ad8d171737b47f1bf0505db4482
+    MONGO_INITDB_USERNAME: ${env:MONGO_INITDB_USERNAME}
+    MONGO_INITDB_PASSWORD: ${env:MONGO_INITDB_PASSWORD}
+    MONGO_CLUSTER: ${env:MONGO_CLUSTER}
+    MONGO_INITDB_DATABASE: ${env:MONGO_INITDB_DATABASE}
+    MONGO_CONNECTION_PROTOCOL: ${env:MONGO_CONNECTION_PROTOCOL}
+    PORT: ${env:PORT}
+    JWT_SECRET: ${env:JWT_SECRET}
+    NODE_ENV: ${self:custom.stage}
 
 #  iamRoleStatements:
 #    - Effect: Allow
@@ -42,6 +44,7 @@ functions:
           cors: true
 
 custom:
+  stage: ${opt:stage, self:provider.stage}
   webpack:
     webpackConfig: webpack.config.js
     includeModules: true

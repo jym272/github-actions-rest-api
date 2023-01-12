@@ -1,0 +1,5 @@
+- warmer
+- serverless en las actions
+- print the dir of the deploy
+- crear una funcion para du
+- serguir viendo node env production

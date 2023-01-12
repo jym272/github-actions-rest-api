@@ -27,7 +27,7 @@ fi
 node dist/index.js &
 node_pid=$!
 
-while ! nc -z localhost $PORT; do
+while ! nc -z localhost "$PORT"; do
   echo "Waiting for server to start..."
   sleep 0.1
 done

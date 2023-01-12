@@ -2,29 +2,37 @@
 
 set -eou pipefail
 
-env_file=".env.test"
+declare env_file=".env.test"
+declare temp="some_value"
 
 if [[ ! -f $env_file ]]; then
   echo -e "\e[1;31m$env_file not found\e[0m"
   exit 1
 fi
 
-function getenv {
+function getenv() {
   local var_name=$1
-  local var_value=$(grep "$var_name" $env_file | cut -d '=' -f 2)
-  if [[ -z $var_value ]]; then
-    echo -e "\e[1;31m$var_name not found in .env.test\e[0m"
-    exit 1
-  fi
-  echo "$var_value"
+  local temporal
+  temporal=$(grep "$var_name" $env_file | cut -d '=' -f 2) || exit 1
+  echo "$temporal"
 };
 
+function error_exit()
+{
+    echo -e "$0: \e[1;31m$* not found in $env_file file\e[0m" 1>&2
+    exit 1
+}
 
-export MONGO_INITDB_USERNAME=$(getenv "MONGO_INITDB_USERNAME")
-export MONGO_INITDB_PASSWORD=$(getenv "MONGO_INITDB_PASSWORD")
-export MONGO_CLUSTER=$(getenv "MONGO_CLUSTER")
-export PORT=$(getenv "PORT")
-export MONGO_INITDB_DATABASE=$(getenv "MONGO_INITDB_DATABASE")
-export MONGO_CONNECTION_PROTOCOL=$(getenv "MONGO_CONNECTION_PROTOCOL")
+temp=$(getenv "MONGO_INITDB_USERNAME") || error_exit "MONGO_INITDB_USERNAME"
+export MONGO_INITDB_USERNAME=$temp
+
+temp=$(getenv "MONGO_INITDB_PASSWORD") || (error_exit "MONGO_INITDB_PASSWORD")
+export MONGO_INITDB_PASSWORD=$temp
+
+temp=$(getenv "MONGO_INITDB_DATABASE") || (error_exit "MONGO_INITDB_DATABASE")
+export MONGO_INITDB_DATABASE=$temp
+
+temp=$(getenv "PORT") || (error_exit "PORT")
+export PORT=$temp
 
 bash scripts/test --build

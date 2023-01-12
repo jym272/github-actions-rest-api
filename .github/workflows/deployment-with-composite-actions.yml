@@ -10,7 +10,7 @@ defaults:
     shell: bash
     working-directory: project
 jobs:
-  build-api:
+  build-api-for-test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -20,7 +20,7 @@ jobs:
         with:
           working-directory: project
           run-commands: |
-            npm ci
+            npm ci --production
             npm run lint
             npm run build
             cp -rf ../.git/ dist/
@@ -74,7 +74,7 @@ jobs:
           report-name: report-containerized
           working-directory: project
           run-commands: |
-            npm ci
+            npm ci --production
             bash scripts/test
   test-api:
     needs: build-api
@@ -106,7 +106,7 @@ jobs:
           report-name: report
           working-directory: project
           run-commands: |
-            npm ci
+            npm ci --production
             bash scripts/test
   report:
     needs: [test-api, test-api-containerized]
