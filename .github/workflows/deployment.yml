@@ -4,7 +4,7 @@ on:
     branches:
       - master
     paths:
-      - 'project/**'
+      - "project/**"
 defaults:
   run:
     working-directory: project
@@ -43,6 +43,7 @@ jobs:
   test-api-containerized:
     needs: build-api-for-test
     runs-on: ubuntu-latest
+    # containerizing the host
     container:
       image: node:19-alpine
     environment: testing
@@ -159,8 +160,8 @@ jobs:
     needs: [test-api, test-api-containerized, lint]
     runs-on: ubuntu-latest
     permissions:
-      id-token: write   # This is required for requesting the JWT
-      contents: read    # This is required for actions/checkout
+      id-token: write # This is required for requesting the JWT
+      contents: read # This is required for actions/checkout
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -190,6 +191,18 @@ jobs:
           MONGO_CLUSTER: cluster0.hhxxk.mongodb.net
           PORT: 3000
           MONGO_CONNECTION_PROTOCOL: mongodb+srv
+      - name: Extract service endpoint
+        run: |
+          echo "SERVICE_ENDPOINT=$(aws cloudformation describe-stacks --stack-name rest-api-express-production --query 'Stacks[0].Outputs[?OutputKey==`ServiceEndpoint`].OutputValue' --output text)" >> $GITHUB_ENV
+      - name: Github script for create a comment
+        uses: peter-evans/create-or-update-comment@v2
+        with:
+          issue-number: ${{ github.event.number }}
+          body: |
+            The service is available at ${{ env.SERVICE_ENDPOINT }}
+          reactions: rocket
+
+
   print-size:
     needs: deploy
     runs-on: ubuntu-latest
