@@ -161,12 +161,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-#      - name: Load cached dependencies and run commands
-#        uses: ./.github/actions/cache-deps
-#        with:
-#          working-directory: project
-#          run-commands: |
-#            echo "No cmd to run"
+      - name: Load cached dependencies and run commands
+        uses: ./.github/actions/cache-deps
+        with:
+          working-directory: project
+          run-commands: |
+            npm ci
       - name: Working dir is
         run: |
           ls -al
@@ -174,7 +174,7 @@ jobs:
       - name: Install Plugin and Deploy
         uses: serverless/github-action@v3.1
         with:
-          args: -c "cd ./project && serverless plugin install --name serverless-webpack && serverless deploy --stage production"
+          args: -c "cd ./project && serverless deploy --stage production"
           entrypoint: /bin/sh
         env:
           MONGO_INITDB_USERNAME: ${{ secrets.MONGO_INITDB_USERNAME }}
