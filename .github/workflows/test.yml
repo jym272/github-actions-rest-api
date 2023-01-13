@@ -3,7 +3,7 @@ on: workflow_dispatch
 jobs:
   deploy:
 #    needs: [ test-api, test-api-containerized, lint ]
-    environment: production
+#    environment: production
     uses: ./.github/workflows/deploy-serverless.yml
     with:
       stage: production
