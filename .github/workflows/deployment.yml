@@ -1,54 +1,50 @@
-name: Test rest api without custom composite actions
-on: workflow_dispatch
-
+name: Test rest api with composite custom actions
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'project/**'
 defaults:
   run:
-    shell: bash
     working-directory: project
-
 jobs:
-  build-api:
+  lint:
     runs-on: ubuntu-latest
-    outputs:
-      size: ${{ steps.build.outputs.SIZE }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: Get npm cache directory
-        id: npm-cache-dir
-        run: echo "dir=$(npm config get cache)" >> ${GITHUB_OUTPUT}
-      - name: Cache dependencies
-        uses: actions/cache@v3
-        id: npm-cache
+      - name: Load cached dependencies and run commands
+        uses: ./.github/actions/cache-deps
         with:
-          path: |
-            ${{ steps.npm-cache-dir.outputs.dir }}
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-      - if: ${{ steps.npm-cache.outputs.cache-hit != 'true' }}
-        name: Not an exact match is found for a cache for the specified key
-        continue-on-error: true
-        run: npm list
-      - name: Install an Build
-        id: build
-        run: |
-          npm ci
-          npm run lint
-          npm run build
-          cp -rf ../.git/ dist/
-          touch dist/.nojekyll
-          echo "SIZE=$(du -sh dist | awk '{print $1}')" >> $GITHUB_OUTPUT
+          working-directory: project
+          run-commands: |
+            npm ci
+            npm run lint
+  build-api-for-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Load cached dependencies and run commands
+        uses: ./.github/actions/cache-deps
+        with:
+          working-directory: project
+          run-commands: |
+            npm ci --production
+            npm run build
+            cp -rf ../.git/ dist/
+            touch dist/.nojekyll
       - name: Upload Artifact - Build dist folder
         uses: actions/upload-artifact@v3
         with:
           name: dist
           path: project/dist
   test-api-containerized:
-    needs: build-api
+    needs: build-api-for-test
     runs-on: ubuntu-latest
     container:
-      image: node:19
+      image: node:19-alpine
     environment: testing
     env:
       MONGO_INITDB_USERNAME: jorge
@@ -63,57 +59,37 @@ jobs:
       mongodb-service:
         image: mongo:latest
         # if the host is not containerized use:
-#        ports:
-#          - 27017:27017
+        #        ports:
+        #          - 27017:27017
         env:
           MONGO_INITDB_ROOT_USERNAME: jorge
           MONGO_INITDB_ROOT_PASSWORD: 123456
     outputs:
-      tests-failed: ${{ steps.failure.outputs.TESTS_FAILED }}
+      tests-failed: ${{ steps.running-tests.outputs.tests-failed }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: Install Netcat in container
-        run: apt-get update && apt-get install -y netcat
-      - name: Get npm cache directory
-        id: npm-cache-dir
-        run: echo "dir=$(npm config get cache)" >> ${GITHUB_OUTPUT}
-      - name: Cache dependencies
-        uses: actions/cache@v3
-        id: npm-cache
-        with:
-          path: |
-            ${{ steps.npm-cache-dir.outputs.dir }}
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-      - if: ${{ steps.npm-cache.outputs.cache-hit != 'true' }}
-        name: Not an exact match is found for a cache for the specified key
-        continue-on-error: true
-        run: npm list
+      - name: Install Bash
+        run: apk add --no-cache bash
+      - name: Install Compatible Tar
+        run: apk add --no-cache tar
       - name: Download artifact - Build dist folder
         uses: actions/download-artifact@v3
         with:
           name: dist
           path: project/dist
-      - name: Install and Run Tests
+      - name: Load cached dependencies and run commands
+        uses: ./.github/actions/cache-deps
         id: running-tests
-        run: |
-          npm ci
-          bash scripts/test
-      - name: Upload report if tests fail
-        if: ${{ failure() && steps.running-tests.outcome == 'failure' }}
-        uses: actions/upload-artifact@v3
         with:
-          name: report-containerized
-          path: project/playwright-report
-      - name: Set Output if tests fail
-        id: failure
-        if: ${{ failure() && steps.running-tests.outcome == 'failure' }}
-        run: |
-          echo "TESTS_FAILED=true" >> $GITHUB_OUTPUT
+          running-test: true
+          report-name: report-containerized
+          working-directory: project
+          run-commands: |
+            npm ci --production
+            bash scripts/test
   test-api:
-    needs: build-api
+    needs: build-api-for-test
     runs-on: ubuntu-latest
     environment: testing
     env:
@@ -125,47 +101,25 @@ jobs:
       MONGO_INITDB_DATABASE: rest-api-test
       MONGO_CONNECTION_PROTOCOL: mongodb+srv
     outputs:
-      tests-failed: ${{ steps.failure.outputs.TESTS_FAILED }}
+      tests-failed: ${{ steps.running-tests.outputs.tests-failed }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: Get npm cache directory
-        id: npm-cache-dir
-        run: echo "dir=$(npm config get cache)" >> ${GITHUB_OUTPUT}
-      - name: Cache dependencies
-        uses: actions/cache@v3
-        id: npm-cache
-        with:
-          path: |
-            ${{ steps.npm-cache-dir.outputs.dir }}
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-      - if: ${{ steps.npm-cache.outputs.cache-hit != 'true' }}
-        name: Not an exact match is found for a cache for the specified key
-        continue-on-error: true
-        run: npm list
       - name: Download artifact - Build dist folder
         uses: actions/download-artifact@v3
         with:
           name: dist
           path: project/dist
-      - name: Install and Run Tests
+      - name: Load cached dependencies and run commands
+        uses: ./.github/actions/cache-deps
         id: running-tests
-        run: |
-          npm ci
-          bash scripts/test
-      - name: Upload report if tests fail
-        if: ${{ failure() && steps.running-tests.outcome == 'failure' }}
-        uses: actions/upload-artifact@v3
         with:
-          name: report
-          path: project/playwright-report
-      - name: Set Output if tests fail
-        id: failure
-        if: ${{ failure() && steps.running-tests.outcome == 'failure' }}
-        run: |
-          echo "TESTS_FAILED=true" >> $GITHUB_OUTPUT
+          running-test: true
+          report-name: report
+          working-directory: project
+          run-commands: |
+            npm ci --production
+            bash scripts/test
   report:
     needs: [test-api, test-api-containerized]
     if: ${{ failure() && (needs.test-api.outputs.tests-failed == 'true' || needs.test-api-containerized.outputs.tests-failed == 'true') }}
@@ -196,10 +150,39 @@ jobs:
           ls -la playwright-report-containerized
           cat playwright-report-containerized/test-results.json | jq
   deploy:
-    needs: [test-api, test-api-containerized]
+    needs: [test-api, test-api-containerized, lint]
     uses: ./.github/workflows/deploy-reusable.yml
     with:
       artifact-name: dist
+  deploy-serverless:
+    environment: production
+    needs: [test-api, test-api-containerized, lint]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Load cached dependencies and run commands
+        uses: ./.github/actions/cache-deps
+        with:
+          working-directory: project
+          run-commands: |
+            npm ci
+      - name: Install Plugin and Deploy
+        uses: serverless/github-action@v3.1
+        with:
+          args: -c "cd ./project && serverless deploy --stage production"
+          entrypoint: /bin/sh
+        env:
+          MONGO_INITDB_USERNAME: ${{ secrets.MONGO_INITDB_USERNAME }}
+          MONGO_INITDB_PASSWORD: ${{ secrets.MONGO_INITDB_PASSWORD }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          # it should be production TODO
+          MONGO_INITDB_DATABASE: rest-api
+          MONGO_CLUSTER: cluster0.hhxxk.mongodb.net
+          PORT: 3000
+          MONGO_CONNECTION_PROTOCOL: mongodb+srv
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   print-size:
     needs: deploy
     runs-on: ubuntu-latest
@@ -209,23 +192,3 @@ jobs:
         run: |
           pwd
           echo ${{ needs.deploy.outputs.size }}
-
-
-#  deploy-frontend:
-#    needs: build-frontend
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Download Artifact
-#        uses: actions/download-artifact@v3
-#        with:
-#          name: frontend
-#      - name: Output from build
-#        run: |
-#          printf 'Out Size in Build Step:\n%s\n' "${{ needs.build-frontend.outputs.size }}"
-#          printf 'Out Size in Download Artifact Files:\n%s\n' "$(du -sh . | awk '{print $1}')"
-#      - name: Deploy
-#        uses: JamesIves/github-pages-deploy-action@releases/v4
-#        with:
-#          BRANCH: gh-pages
-#          FOLDER: .
-#          CLEAN: true
