@@ -15,7 +15,7 @@ jobs:
       - name: configure aws credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          role-to-assume: arn:aws:iam::712136406596:role/github-actions-oidc
+          role-to-assume: arn:aws:iam::712136406596:role/github-actions-role-with-oidc
           role-session-name: testingsession
           aws-region: ${{ env.AWS_REGION }}
       # list the cloudformation stacks
