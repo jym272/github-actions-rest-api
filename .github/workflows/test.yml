@@ -1,7 +1,8 @@
-name: Test rest api with composite custom actions
+name: Test
 on: workflow_dispatch
 jobs:
   deploy:
+#    needs: [ test-api, test-api-containerized, lint ]
     environment: production
     uses: ./.github/workflows/deploy-serverless.yml
     with:
