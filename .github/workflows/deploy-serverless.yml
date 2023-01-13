@@ -13,7 +13,7 @@ on:
 
 jobs:
   deploy-serverless:
-#    environment: production
+    environment: production
     outputs:
       service-endpoint: ${{ steps.endpoint.outputs.SERVICE_ENDPOINT }}
     runs-on: ubuntu-latest
@@ -21,14 +21,14 @@ jobs:
       id-token: write # This is required for requesting the JWT
       contents: read # This is required for actions/checkout
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-      - name: Load cached dependencies and run commands
-        uses: ./.github/actions/cache-deps
-        with:
-          working-directory: project
-          run-commands: |
-            npm ci
+#      - name: Checkout code
+#        uses: actions/checkout@v3
+#      - name: Load cached dependencies and run commands
+#        uses: ./.github/actions/cache-deps
+#        with:
+#          working-directory: project
+#          run-commands: |
+#            npm ci
       - name: Configure aws credentials with role oidc
         uses: aws-actions/configure-aws-credentials@v1-node16
         with:
