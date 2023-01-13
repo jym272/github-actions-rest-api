@@ -24,12 +24,12 @@ else
   echo -e "\e[1;32mRunning test\e[0m"
 fi
 
-node dist/index.js &
+node dist/server.js &
 node_pid=$!
 
 while ! nc -z localhost "$PORT"; do
   echo "Waiting for server to start..."
-  sleep 0.1
+  sleep 0.3
 done
 
 playwright_test_exit_code=1
