@@ -174,7 +174,7 @@ jobs:
       - name: Install Plugin and Deploy
         uses: serverless/github-action@v3.1
         with:
-          args: -c "cd ./project && serverless plugin install --name serverless-webpack && serverless --stage production deploy"
+          args: -c "cd ./project && serverless plugin install --name serverless-webpack && serverless deploy --stage production"
           entrypoint: /bin/sh
         env:
           MONGO_INITDB_USERNAME: ${{ secrets.MONGO_INITDB_USERNAME }}
