@@ -6,7 +6,7 @@ import serverless from 'serverless-http';
 const { server } = initializeSetup();
 
 const PORT = getEnv('PORT');
-// dumy comment
+
 void (async () => {
   try {
     startSetup(server);
