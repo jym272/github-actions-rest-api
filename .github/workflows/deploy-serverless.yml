@@ -13,7 +13,7 @@ on:
 
 jobs:
   deploy-serverless:
-    environment: production
+#    environment: production
     outputs:
       service-endpoint: ${{ steps.endpoint.outputs.SERVICE_ENDPOINT }}
     runs-on: ubuntu-latest

@@ -152,6 +152,7 @@ jobs:
           cat playwright-report-containerized/test-results.json | jq
   deploy:
     needs: [test-api, test-api-containerized, lint]
+    environment: production
     uses: ./.github/workflows/deploy-serverless.yml
     with:
       stage: production
