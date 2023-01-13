@@ -18,10 +18,8 @@ elif [[ $# -eq 1 && $1 == "--build" ]]; then
 fi
 
 if [[ $arg == "--build" ]]; then
-  echo -e "\e[1;32mBuilding the project and running test\e[0m"
+  echo -e "\e[1;32mBuilding the project\e[0m"
   npm run build
-else
-  echo -e "\e[1;32mRunning test\e[0m"
 fi
 
 node dist/server.js &

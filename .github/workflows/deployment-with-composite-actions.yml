@@ -154,6 +154,31 @@ jobs:
     uses: ./.github/workflows/deploy-reusable.yml
     with:
       artifact-name: dist
+  deploy-serverless:
+    environment: production
+    needs: [test-api, test-api-containerized, lint]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+#      - name: Load cached dependencies and run commands
+#        uses: ./.github/actions/cache-deps
+#        with:
+#          working-directory: project
+#          run-commands: |
+#            echo "No cmd to run"
+      - name: Working dir is
+        run: |
+          ls -al
+          pwd
+      - name: Install Plugin and Deploy
+        uses: serverless/github-action@v3.1
+        with:
+          args: -c "serverless plugin install --name serverless-webpack && serverless --stage production deploy"
+          entrypoint: /bin/sh
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   print-size:
     needs: deploy
     runs-on: ubuntu-latest

@@ -4,6 +4,7 @@ useDotenv: true
 
 provider:
   name: aws
+  stage: dev
   runtime: nodejs18.x
   region: sa-east-1
   apiGateway:
