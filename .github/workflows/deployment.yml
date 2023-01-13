@@ -167,7 +167,13 @@ jobs:
           working-directory: project
           run-commands: |
             npm ci
-      - name: Install Plugin and Deploy
+      - name: Configure aws credentials with role oidc
+        uses: aws-actions/configure-aws-credentials@v1-node16
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          role-session-name: deploy-rest-api-serverless
+          aws-region: sa-east-1
+      - name: Serverless Deploy Rest API
         uses: serverless/github-action@v3.1
         with:
           args: -c "cd ./project && serverless deploy --stage production"
@@ -181,8 +187,6 @@ jobs:
           MONGO_CLUSTER: cluster0.hhxxk.mongodb.net
           PORT: 3000
           MONGO_CONNECTION_PROTOCOL: mongodb+srv
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   print-size:
     needs: deploy
     runs-on: ubuntu-latest
