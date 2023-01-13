@@ -1,0 +1,24 @@
+name: Testing aws-with-github oidc-token
+on: workflow_dispatch
+env:
+  AWS_REGION : sa-east-1
+jobs:
+  aws-with-github:
+    runs-on: ubuntu-latest
+    name: Testing aws-with-github oidc-token
+    permissions:
+      id-token: write   # This is required for requesting the JWT
+      contents: read    # This is required for actions/checkout
+    steps:
+      - name: Git clone the repository
+        uses: actions/checkout@v3
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: arn:aws:iam::712136406596:role/github-actions-oidc
+          role-session-name: testingsession
+          aws-region: ${{ env.AWS_REGION }}
+      # list the cloudformation stacks
+      - name: List the cloudformation stacks
+        run: |
+          aws cloudformation list-stacks --stack-status-filter CREATE_COMPLETE
