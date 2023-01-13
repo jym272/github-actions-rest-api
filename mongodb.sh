@@ -11,3 +11,8 @@ echo $token
 
 # delete object with authorization header token DELETE METHOD in /delete-people-collection
 curl -X DELETE -H "Authorization: Bearer $token" http://localhost:3000/delete-people-collection
+
+
+id=63c0ad5a1c7803fdb39a6e9c
+# send delete method to '/delete/:id'
+curl -X DELETE  http://localhost:3000/delete/63c0ad5a1c7803fdb39a6e9c

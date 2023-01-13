@@ -8,3 +8,8 @@ export const getEnv = (key: string): string => {
   }
   return value;
 };
+
+export const successConnectionMsg = (msg: string) => {
+  // eslint-disable-next-line no-console
+  console.log('\x1b[32m%s\x1b[0m', msg);
+};

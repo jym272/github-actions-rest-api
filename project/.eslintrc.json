@@ -20,7 +20,7 @@
   "plugins": ["@typescript-eslint", "prettier"],
   "rules": {
     "prettier/prettier": "warn",
-    "no-console": "off",
+    "no-console": "error",
     "no-debugger": "error",
     "no-alert": "error",
     "no-undef": "off",

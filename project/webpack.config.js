@@ -25,7 +25,15 @@ module.exports = {
     ]
   },
   resolve: {
-    extensions: ['.ts']
+    extensions: ['.ts'],
+    alias: {
+      '@db': path.resolve(__dirname, 'src/db'),
+      '@routes': path.resolve(__dirname, 'src/routes'),
+      '@middlewares': path.resolve(__dirname, 'src/middlewares'),
+      '@controllers': path.resolve(__dirname, 'src/controllers'),
+      '@utils': path.resolve(__dirname, 'src/utils'),
+      '@custom-types': path.resolve(__dirname, 'src/types')
+    }
   },
   externals: [nodeExternals()]
 };

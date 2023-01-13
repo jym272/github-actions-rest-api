@@ -1,5 +1,5 @@
 import { MongoClient } from 'mongodb';
-import { getEnv } from '../utils';
+import { getEnv, successConnectionMsg } from '@utils/index';
 
 const username = getEnv('MONGO_INITDB_USERNAME');
 const password = getEnv('MONGO_INITDB_PASSWORD');
@@ -15,5 +15,5 @@ export const db = client.db(dbName).collection('people');
 
 export const connectMongodb = async () => {
   await client.connect();
-  console.log('Connected successfully to mongodb');
+  successConnectionMsg('Connected successfully to mongodb');
 };

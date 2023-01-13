@@ -32,7 +32,7 @@ package:
 
 functions:
   rest-api:
-    handler: src/index.handler
+    handler: src/server.express
     events:
       - http:
           path: /
