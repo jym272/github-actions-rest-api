@@ -22,3 +22,7 @@ jobs:
       - name: List the cloudformation stacks
         run: |
           aws cloudformation list-stacks --stack-status-filter CREATE_COMPLETE
+      - name: Github env var
+        run: |
+          echo "{{ github }}"
+          env
