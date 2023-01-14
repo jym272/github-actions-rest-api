@@ -11,6 +11,8 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_PASSWORD}
 
   rest-api:
+    depends_on:
+      - mongodb-service
     restart: always
     build:
       context: ./project
