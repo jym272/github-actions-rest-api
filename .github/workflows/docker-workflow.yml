@@ -8,6 +8,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        path: project
 #      - name: Build local actions
 #        shell: bash
 #        run: |
