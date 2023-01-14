@@ -10,7 +10,7 @@ on:
       service-endpoint:
         description: Service endpoint
         value: ${{ jobs.deploy-serverless.outputs.service-endpoint }}
-#    secrets:
+#    secrets: #uncomment if inherit is not place in the workflow caller
 #      AWS_ROLE_TO_ASSUME:
 #        required: true
 
@@ -24,39 +24,38 @@ jobs:
       id-token: write # This is required for requesting the JWT
       contents: read # This is required for actions/checkout
     steps:
-#      - name: Checkout code
-#        uses: actions/checkout@v3
-#      - name: Load cached dependencies and run commands
-#        uses: ./.github/actions/cache-deps
-#        with:
-#          working-directory: project
-#          run-commands: |
-#            npm ci
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Load cached dependencies and run commands
+        uses: ./.github/actions/cache-deps
+        with:
+          working-directory: project
+          run-commands: |
+            npm ci
       - name: Configure aws credentials with role oidc
         uses: aws-actions/configure-aws-credentials@v1-node16
         with:
-          # ${{ secrets.AWS_ROLE_TO_ASSUME }}  arn:aws:iam::712136406596:role/github-actions-oidc
           role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
           role-session-name: deploy-rest-api-serverless
           aws-region: sa-east-1
-#      - name: Serverless Deploy Rest API
-#        uses: serverless/github-action@v3.1
-#        with:
-#          args: -c "serverless deploy --stage ${{ inputs.stage }}"
-#          entrypoint: /bin/sh
-#        env:
-#          MONGO_INITDB_USERNAME: ${{ secrets.MONGO_INITDB_USERNAME }}
-#          MONGO_INITDB_PASSWORD: ${{ secrets.MONGO_INITDB_PASSWORD }}
-#          JWT_SECRET: ${{ secrets.JWT_SECRET }}
-#          # it should be production TODO
-#          MONGO_INITDB_DATABASE: rest-api
-#          MONGO_CLUSTER: cluster0.hhxxk.mongodb.net
-#          PORT: 3000
-#          MONGO_CONNECTION_PROTOCOL: mongodb+srv
-#      - name: Extract service endpoint
-#        id: endpoint
-#        run: |
-#          echo "SERVICE_ENDPOINT=$(aws cloudformation describe-stacks --stack-name rest-api-express-production --query 'Stacks[0].Outputs[?OutputKey==`ServiceEndpoint`].OutputValue' --output text)" >> $GITHUB_OUTPUT
+      - name: Serverless Deploy Rest API
+        uses: serverless/github-action@v3.1
+        with:
+          args: -c "serverless deploy --stage ${{ inputs.stage }}"
+          entrypoint: /bin/sh
+        env:
+          MONGO_INITDB_USERNAME: ${{ secrets.MONGO_INITDB_USERNAME }}
+          MONGO_INITDB_PASSWORD: ${{ secrets.MONGO_INITDB_PASSWORD }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          # it should be production TODO
+          MONGO_INITDB_DATABASE: rest-api
+          MONGO_CLUSTER: cluster0.hhxxk.mongodb.net
+          PORT: 3000
+          MONGO_CONNECTION_PROTOCOL: mongodb+srv
+      - name: Extract service endpoint
+        id: endpoint
+        run: |
+          echo "SERVICE_ENDPOINT=$(aws cloudformation describe-stacks --stack-name rest-api-express-production --query 'Stacks[0].Outputs[?OutputKey==`ServiceEndpoint`].OutputValue' --output text)" >> $GITHUB_OUTPUT
 
 #        - name: Github script for create a comment
 #          uses: peter-evans/create-or-update-comment@v2

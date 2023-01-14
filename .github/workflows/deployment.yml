@@ -154,7 +154,7 @@ jobs:
     needs: [test-api, test-api-containerized, lint]
     uses: ./.github/workflows/deploy-serverless.yml
     secrets: inherit
-#      AWS_ROLE_TO_ASSUME: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+#      AWS_ROLE_TO_ASSUME: ${{ secrets.AWS_ROLE_TO_ASSUME }} # for granular secret access delete inherit and add the secret
     with:
       stage: production
 
