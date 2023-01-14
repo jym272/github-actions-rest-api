@@ -1,0 +1,11 @@
+ame: Script Injection
+# on open an issue
+on:
+  issues:
+    types: [opened]
+jobs:
+  inject:
+    - name: Inject
+      run: |
+        issue_number=$(jq --raw-output .issue.number "$GITHUB_EVENT_PATH")
+        echo "issue_number=$issue_number"
