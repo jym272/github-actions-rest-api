@@ -166,7 +166,6 @@ jobs:
         shell: bash
         working-directory: .
     steps:
-      - name:
+      - name: Endpoint
         run: |
-          pwd
-          echo -e "\e[32m${{ needs.deploy.outputs.service-endpoint }}\e[0m"
+          echo "${{ needs.deploy.outputs.service-endpoint }}"
