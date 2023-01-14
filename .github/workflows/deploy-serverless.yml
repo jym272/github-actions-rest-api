@@ -41,7 +41,7 @@ jobs:
       - name: Serverless Deploy Rest API
         uses: serverless/github-action@v3.1
         with:
-          args: -c "serverless deploy --stage ${{ inputs.stage }}"
+          args: -c "cd ./project && serverless deploy --stage ${{ inputs.stage }}"
           entrypoint: /bin/sh
         env:
           MONGO_INITDB_USERNAME: ${{ secrets.MONGO_INITDB_USERNAME }}
