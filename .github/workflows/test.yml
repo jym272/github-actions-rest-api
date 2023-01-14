@@ -2,8 +2,8 @@ name: Test
 on: workflow_dispatch
 jobs:
   deploy:
-#    needs: [ test-api, test-api-containerized, lint ]
-#    environment: production
     uses: ./.github/workflows/deploy-serverless.yml
+    secrets:
+      AWS_ROLE_TO_ASSUME: ${{ secrets.AWS_ROLE_TO_ASSUME }}
     with:
       stage: production

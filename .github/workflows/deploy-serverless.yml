@@ -10,10 +10,13 @@ on:
       service-endpoint:
         description: Service endpoint
         value: ${{ jobs.deploy-serverless.outputs.service-endpoint }}
+    secrets:
+      AWS_ROLE_TO_ASSUME:
+        required: true
 
 jobs:
   deploy-serverless:
-#    environment: production
+    environment: production
     outputs:
       service-endpoint: ${{ steps.endpoint.outputs.SERVICE_ENDPOINT }}
     runs-on: ubuntu-latest
@@ -32,8 +35,8 @@ jobs:
       - name: Configure aws credentials with role oidc
         uses: aws-actions/configure-aws-credentials@v1-node16
         with:
-          # ${{ secrets.AWS_ROLE_TO_ASSUME }}
-          role-to-assume: arn:aws:iam::712136406596:role/github-actions-oidc
+          # ${{ secrets.AWS_ROLE_TO_ASSUME }}  arn:aws:iam::712136406596:role/github-actions-oidc
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
           role-session-name: deploy-rest-api-serverless
           aws-region: sa-east-1
 #      - name: Serverless Deploy Rest API
