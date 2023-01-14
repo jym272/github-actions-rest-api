@@ -11,8 +11,6 @@ jobs:
         run: |
           echo "$GITHUB_EVENT_PATH"
           echo "${{ toJSON(github.event.issue) }}"
-          issue_number=$(jq --raw-output .issue.number "$GITHUB_EVENT_PATH")
-          issue_title="${{ github.event.issue.title }}"
+#          issue_title="${{ github.event.issue.title }}"
           issue_title=$(jq --raw-output .issue.title "$GITHUB_EVENT_PATH")
           issue_title_allow_script_injection=$(echo "$issue_title" | sed 's/</\&lt;/g' | sed 's/>/\&gt;/g')
-          echo "issue_number=$issue_number"
