@@ -1,4 +1,4 @@
-ame: Script Injection
+name: Script Injection
 # on open an issue
 on:
   issues:
