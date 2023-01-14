@@ -5,7 +5,9 @@ on:
     types: [opened]
 jobs:
   inject:
-    - name: Inject
-      run: |
-        issue_number=$(jq --raw-output .issue.number "$GITHUB_EVENT_PATH")
-        echo "issue_number=$issue_number"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Inject
+        run: |
+          issue_number=$(jq --raw-output .issue.number "$GITHUB_EVENT_PATH")
+          echo "issue_number=$issue_number"
