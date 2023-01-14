@@ -8,16 +8,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-        with:
-          path: project
 #      - name: Build local actions
 #        shell: bash
 #        run: |
 #          bash .github/actions/build-actions
-      - name: CMDS
-        run: |
-          pwd 
-          ls -la
       - name: Copy project to action directory
         run: |
           cp -rf ./project/** .github/actions/docker-action
