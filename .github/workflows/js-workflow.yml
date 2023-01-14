@@ -14,7 +14,7 @@ jobs:
           bash .github/actions/build-actions
       - name: Hello world action step
         id: hello
-        uses: ./.github/actions/deploy-s3-js-action
+        uses: ./.github/actions/js-action
         with:
           who-to-greet: 'Jorgeeeeeasdasd'
       # Use the output from the `hello` step

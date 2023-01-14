@@ -1,0 +1,24 @@
+name: Using Docker action
+on: workflow_dispatch
+
+jobs:
+  docker-job:
+    runs-on: ubuntu-latest
+    name: A docker example
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Build local actions
+        shell: bash
+        run: |
+          bash .github/actions/build-actions
+      - name: Docker action step
+        id: hello
+        uses: ./.github/actions/docker-action
+        with:
+          who-to-greet: 'Jorgeeeeeasdasd'
+#      - name: Get the output time
+#        run: echo "The time was ${{ steps.hello.outputs.time }}"
+#      - name: Env vars
+#        run: |
+#          env

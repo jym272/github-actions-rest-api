@@ -1,4 +1,4 @@
-name: Test rest api with composite custom actions
+name: Deploy rest-api-express
 on:
   push:
     branches:
