@@ -19,8 +19,7 @@ RUN npm run build
 
 FROM node:19-alpine as runner
 
-#WORKDIR /app
-WORKDIR /github/workspace
+WORKDIR /app
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nodeuser --ingroup nodejs
@@ -33,4 +32,4 @@ USER nodeuser
 
 ENV NODE_ENV=production
 
-CMD ["node", "dist/server.js"]
+CMD ["node", "./dist/server.js"]
