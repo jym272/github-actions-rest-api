@@ -8,10 +8,13 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: Build local actions
-        shell: bash
+#      - name: Build local actions
+#        shell: bash
+#        run: |
+#          bash .github/actions/build-actions
+      - name: Copy project to action directory
         run: |
-          bash .github/actions/build-actions
+          cp -rf ./project/** .github/actions/docker-action
       - name: Docker action step
         id: hello
         uses: ./.github/actions/docker-action

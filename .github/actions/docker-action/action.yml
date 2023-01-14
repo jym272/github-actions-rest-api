@@ -1,5 +1,5 @@
-name: "JS action"
-description: "JS action example"
+name: "Docker action"
+description: "Docker action example"
 inputs:
   who-to-greet: # id of input
     description: "Who to greet"
