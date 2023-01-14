@@ -1,4 +1,4 @@
-name: Deploy
+name: Deploy reuse workflow
 on:
   workflow_call:
     inputs:
@@ -10,9 +10,9 @@ on:
       service-endpoint:
         description: Service endpoint
         value: ${{ jobs.deploy-serverless.outputs.service-endpoint }}
-    secrets:
-      AWS_ROLE_TO_ASSUME:
-        required: true
+#    secrets:
+#      AWS_ROLE_TO_ASSUME:
+#        required: true
 
 jobs:
   deploy-serverless:
