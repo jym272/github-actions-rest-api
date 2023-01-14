@@ -10,6 +10,6 @@ jobs:
       - name: Inject
         run: |
           echo "$GITHUB_EVENT_PATH"
-          echo "${{ github.event.issue }}"
+          echo "${{ toJSON(github.event.issue) }}"
           issue_number=$(jq --raw-output .issue.number "$GITHUB_EVENT_PATH")
           echo "issue_number=$issue_number"
