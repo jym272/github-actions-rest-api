@@ -19,7 +19,7 @@ RUN npm run build
 
 FROM node:19-alpine as runner
 
-WORKDIR /app
+#WORKDIR /app
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nodeuser --ingroup nodejs
