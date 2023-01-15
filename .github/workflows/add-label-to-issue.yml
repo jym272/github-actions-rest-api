@@ -1,0 +1,14 @@
+name: Labeling issues
+on:
+  issues:
+    types: [opened]
+jobs:
+  label-a-bug-issue:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Labeling bug if an issue has bug in the title
+        uses: actions-ecosystem/action-add-labels@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          labels: bug
+        if: ${{ contains(github.event.issue.title, 'bug') }}
