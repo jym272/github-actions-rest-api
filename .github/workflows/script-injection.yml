@@ -1,19 +1,23 @@
 name: Script Injection
-# on open an issue
+# open an issue with title:  -> a"; echo Got your secrets." <-
 on:
   issues:
     types: [opened]
-# #          issue_title="${{ github.event.issue.title }}"
 jobs:
   inject:
     runs-on: ubuntu-latest
     steps:
       - name: Inject
+        env:
+          # it's safe because in the shell is treated as a string
+          SAFE_TITLE: ${{ github.event.issue.title }}
+        # add this lines to run: for script injection:
+        #          issue_title="${{ github.event.issue.title }}" # it works because is executed in the shell
+        #          echo "issue_title_with_script_injection: $issue_title"
+
+        # safe run cmds
         run: |
-          echo "$GITHUB_EVENT_PATH"
           echo "${{ toJSON(github.event.issue) }}"
           issue_title=$(jq --raw-output .issue.title "$GITHUB_EVENT_PATH")
           issue_title_escape_any_html_chars=$(echo "$issue_title" | sed 's/</\&lt;/g' | sed 's/>/\&gt;/g')
           echo "issue_title_escape_any_html_chars: $issue_title_escape_any_html_chars"
-          issue_title="${{ github.event.issue.title }}"
-          echo "issue_title: $issue_title"
