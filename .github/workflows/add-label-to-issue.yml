@@ -5,6 +5,8 @@ on:
 jobs:
   label-a-bug-issue:
     runs-on: ubuntu-latest
+    permissions:
+      issues: write
     steps:
       #      - name: Labeling bug if an issue has bug in the title
       #        uses: actions-ecosystem/action-add-labels@v1
