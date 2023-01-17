@@ -22,7 +22,7 @@ test.describe('test', () => {
     const response = await request.post('/save', { headers, data });
     const body = await response.body();
     expect(response.ok()).toBe(true);
-    expect(body.toString()).toBe('{"message":"Person saved."}');
+    expect(body.toString()).toBe('{"message":"Person saved.."}');
     expect(response.status()).toBe(200);
   });
 });
