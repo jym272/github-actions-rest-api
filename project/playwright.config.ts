@@ -3,7 +3,11 @@
  * @type {import('@playwright/test').PlaywrightTestConfig}
  */
 
-const PORT = process.env.PORT ?? 3000;
+const PORT =
+  process.env.PORT ||
+  (() => {
+    throw new Error('PORT is not defined');
+  })();
 const reporters = [
   ['list', { printSteps: true }],
   ['html', { open: 'never' }],
