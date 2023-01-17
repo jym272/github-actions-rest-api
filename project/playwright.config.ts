@@ -12,9 +12,6 @@ const reporters = [
 if (!process.env.CI) {
   // if not running in CI remove the json reporter
   reporters.pop();
-} else {
-  // if running in CI add the 'github' reporter
-  reporters.push(['github']);
 }
 
 const config = {
