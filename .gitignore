@@ -7,3 +7,4 @@ playwright-report
 dist
 todo.txt
 cmd.sh
+.idea
